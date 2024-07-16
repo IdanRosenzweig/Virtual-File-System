@@ -12,10 +12,10 @@ public:
 
 private:
     // create a node in the comp down from the given root node
-    virtual node_id mknode(node_id root, const path_comp& comp, const node_data_var &data) = 0;
+    virtual node_id mknode(node_id root, const path_comp& comp, const poly_data &data) = 0;
 
     // search the path starting from the parent node, create any trailing empty nodes if needed
-    virtual node_id mkpath(node_id parent, const path& path, const vector<node_data_var> &data) = 0;
+    virtual node_id mkpath(node_id parent, const path& path, const vector<poly_data> &data) = 0;
 
 public:
     // search the path component going down from the given root node
@@ -38,6 +38,7 @@ public:
     virtual node_id mk_obj(node_id root, const path_comp& comp, const obj_data& data) = 0;
 
     virtual loaded_node stat_node(node_id node) = 0;
+
 
 };
 #endif //FS_OPS_H

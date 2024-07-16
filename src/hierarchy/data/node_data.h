@@ -13,18 +13,18 @@ enum class node_data_type {
     NULL_DATA, DIR, OBJ
 };
 
-using node_data_var = std::variant<null_data, dir, object>;
+using poly_data = std::variant<null_data, dir, object>; // polymorphic data
 
 struct node_data {
     node_data_id id;
-    node_data_var data; // polymorphic data
+    poly_data data;
 
     static constexpr inline node_data_type data_type(const node_data &data) {
         switch (data.data.index()) {
             default:
-            case variant_index<null_data, node_data_var>: return node_data_type::NULL_DATA;
-            case variant_index<dir, node_data_var>: return node_data_type::DIR;
-            case variant_index<object, node_data_var>: return node_data_type::OBJ;
+            case variant_index<null_data, poly_data>: return node_data_type::NULL_DATA;
+            case variant_index<dir, poly_data>: return node_data_type::DIR;
+            case variant_index<object, poly_data>: return node_data_type::OBJ;
         }
     }
 

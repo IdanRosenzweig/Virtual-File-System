@@ -43,6 +43,7 @@ public:
     ~ramfs() {
     }
 
+private:
     node_id allocte_node() override;
 
     void free_node(node_id id) override;
@@ -63,6 +64,7 @@ public:
 
     void update_node_data(const node_data *data) override;
 
+public:
     node_id get_root_node_id() override;
 };
 

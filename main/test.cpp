@@ -4,11 +4,9 @@ using namespace std;
 
 #include "samples/ramfs.h"
 
-int main() {
-    ramfs fs;
+ramfs fs; // sample ram file system
 
-    loaded_node root_node(fs.read_node(fs.get_root_node_id(), true, true));
-    cout << "root node id: " << root_node.ptr->id << endl;
+int main() {
 
     // fs.mk_dir(fs.get_root_node_id(), parse_path("/home/user/ctf/").second);
     // fs.mk_dir(fs.get_root_node_id(), parse_path("/boot").second);
@@ -24,20 +22,21 @@ int main() {
     fs.mk_obj(dir_id, path_comp{(uint8_t*) "filetxte"}, obj_data{text_file{"this is some data in a text file"}});
 
 
+    node_id gdb_node = fs.search_path(fs.get_root_node_id(), parsed.second);
+    node_id file_node = fs.search_comp(gdb_node, path_comp{(uint8_t*) "filetxta"});
 
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     for (int i = 0; i < 10000; i++) {
-        node_id gdb_node = fs.search_path(fs.get_root_node_id(), parsed.second);
         if (gdb_node != node_id_null) {
             auto stat = fs.stat_node(gdb_node);
             // cout << "stated gdb node\n";
             // cout << "name: " << stat->name.c_str() << endl;
             // cout << "type: " << (int) node::data_type(*stat) << endl;
         }
-        node_id file_node = fs.search_comp(gdb_node, path_comp{(uint8_t*) "filetxta"});
-        if (gdb_node != node_id_null) {
-            auto stat = fs.stat_node(gdb_node);
-            // cout << std::get<0>(std::get<2>(stat.ptr->data).data).text << "\n";
+        if (file_node != node_id_null) {
+            auto stat = fs.stat_node(file_node);
+            // auto content = fs.()
+            // cout << "stated filetxt node\n";
             // cout << "name: " << stat->name.c_str() << endl;
             // cout << "type: " << (int) node::data_type(*stat) << endl;
         }

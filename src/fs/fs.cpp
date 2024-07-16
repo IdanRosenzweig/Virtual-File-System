@@ -5,7 +5,7 @@
 #include "lib/lib_common.h"
 
 
-node_id fs::mknode(node_id root, const path_comp &comp, const node_data_var &data) {
+node_id fs::mknode(node_id root, const path_comp &comp, const poly_data &data) {
     if (!has_node(root)) return node_id_null;
 
     loaded_node root_node(std::move(read_node(root, false, true)));
@@ -43,7 +43,7 @@ node_id fs::mknode(node_id root, const path_comp &comp, const node_data_var &dat
     }
 }
 
-node_id fs::mkpath(node_id parent, const path &path, const vector<node_data_var> &data) {
+node_id fs::mkpath(node_id parent, const path &path, const vector<poly_data> &data) {
     if (!has_node(parent)) return node_id_null;
 
     node_id curr_id = parent;
@@ -83,7 +83,7 @@ node_id fs::mk_dir(node_id root, const path &path) {
 
     node_id curr_id = root;
     for (int i = 0; i < path.size() && curr_id != node_id_null; i++) {
-        curr_id = mknode(curr_id, path[i], node_data_var(dir{}));
+        curr_id = mknode(curr_id, path[i], poly_data(dir{}));
     }
 
     return curr_id;
@@ -91,7 +91,7 @@ node_id fs::mk_dir(node_id root, const path &path) {
 
 node_id fs::mk_obj(node_id root, const path_comp &comp, const obj_data &data) {
     object obj(data);
-    return mknode(root, comp, node_data_var{std::move(obj)});
+    return mknode(root, comp, poly_data{std::move(obj)});
 }
 
 loaded_node fs::stat_node(node_id node) {

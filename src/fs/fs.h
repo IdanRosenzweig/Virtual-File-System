@@ -6,9 +6,9 @@
 
 struct fs : private fs_node_ops, public fs_ops {
 private:
-    node_id mknode(node_id root, const path_comp &comp, const node_data_var &data) override;
+    node_id mknode(node_id root, const path_comp &comp, const poly_data &data) override;
 
-    node_id mkpath(node_id parent, const path& path, const vector<node_data_var> &data) override;
+    node_id mkpath(node_id parent, const path& path, const vector<poly_data> &data) override;
 
 public:
     node_id search_comp(node_id root, const path_comp &comp) override;
