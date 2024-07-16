@@ -1,16 +1,17 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "../node/node_id.h"
+// #include "../node/node_id.h"
 #include "obj_data.h"
 #include "lib/lib_common.h"
 
-struct fs;
+#include "text_file/text_file.h"
+
+// struct fs;
 
 struct object {
 private:
-    fs *owner_fs; // pointer to the owning filesytem
-    node_id base_node;
+    // node_id base_node;
 
 public:
     obj_data data;
@@ -21,9 +22,11 @@ public:
         }
     }
 
-    object(fs *owner_fs, node_id base_node)
-        : owner_fs(owner_fs),
-          base_node(base_node) {
+    // object(node_id base_node)
+        // : base_node(base_node) {
+    // }
+    explicit object(const obj_data &data)
+        : data(data) {
     }
 };
 

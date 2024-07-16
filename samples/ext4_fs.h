@@ -2,7 +2,7 @@
 #define EXT4_FS_H
 
 #include "src/fs/fs.h"
-#include "src/hierarchy/dir/dir.h"
+#include "src/hierarchy/data/dir/dir.h"
 #include "lib/id_manager.h"
 
 class ext4_fs : public fs{

@@ -2,7 +2,7 @@
 #define OBJ_DATA_H
 
 #include <variant>
-#include "../text_file/text_file.h"
+#include "text_file/text_file.h"
 
 enum class obj_data_type {
     TEXT_FILE

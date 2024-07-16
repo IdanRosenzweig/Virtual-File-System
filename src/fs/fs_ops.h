@@ -1,8 +1,9 @@
 #ifndef FS_OPS_H
 #define FS_OPS_H
 
-#include "src/hierarchy/path/path.h"
-#include "src/hierarchy/node/node_data.h"
+#include "src/hierarchy/base/node/node_id.h"
+#include "src/hierarchy/base/path/path.h"
+#include "src/hierarchy/data/node_data.h"
 
 struct fs_ops {
 public:
@@ -11,10 +12,10 @@ public:
 
 private:
     // create a node in the comp down from the given root node
-    virtual node_id mknode(node_id root, const path_comp& comp, const node_data& data) = 0;
+    virtual node_id mknode(node_id root, const path_comp& comp, const node_data_var &data) = 0;
 
     // search the path starting from the parent node, create any trailing empty nodes if needed
-    virtual node_id mkpath(node_id parent, const path& path, const vector<node_data>& data) = 0;
+    virtual node_id mkpath(node_id parent, const path& path, const vector<node_data_var> &data) = 0;
 
 public:
     // search the path component going down from the given root node
@@ -36,7 +37,7 @@ public:
 
     virtual node_id mk_obj(node_id root, const path_comp& comp, const obj_data& data) = 0;
 
-    virtual std::unique_ptr<node> stat_node(node_id node) = 0;
+    virtual loaded_node stat_node(node_id node) = 0;
 
 };
 #endif //FS_OPS_H

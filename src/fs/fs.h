@@ -5,13 +5,10 @@
 #include "fs_ops.h"
 
 struct fs : private fs_node_ops, public fs_ops {
-public:
-    node_id get_root_node_id() override;
-
 private:
-    node_id mknode(node_id root, const path_comp &comp, const node_data& data) override;
+    node_id mknode(node_id root, const path_comp &comp, const node_data_var &data) override;
 
-    node_id mkpath(node_id parent, const path& path, const vector<node_data>& data) override;
+    node_id mkpath(node_id parent, const path& path, const vector<node_data_var> &data) override;
 
 public:
     node_id search_comp(node_id root, const path_comp &comp) override;
@@ -22,7 +19,7 @@ public:
 
     node_id mk_obj(node_id root, const path_comp &comp, const obj_data &data) override;
 
-    std::unique_ptr<node> stat_node(node_id node) override;
+    loaded_node stat_node(node_id node) override;
 
 };
 
