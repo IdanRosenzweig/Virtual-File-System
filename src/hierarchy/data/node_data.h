@@ -6,58 +6,62 @@
 #include "node_data_id.h"
 
 #include "null_data/null_data.h"
-#include "object/object.h"
 #include "dir/dir.h"
+#include "soft_link/soft_link.h"
+#include "text_file/text_file.h"
 
 enum class node_data_type {
-    NULL_DATA, DIR, OBJ
+    NULL_DATA, DIR, SOFT_LINK, TEXTFILE
 };
 
-using poly_data = std::variant<null_data, dir, object>; // polymorphic data
+using data = std::variant<null_data, dir, soft_link, text_file>; // polymorphic data
 
-struct node_data {
-    node_data_id id;
-    poly_data data;
-
-    static constexpr inline node_data_type data_type(const node_data &data) {
-        switch (data.data.index()) {
+struct node_data : public data {
+    static constexpr inline node_data_type data_type(const node_data &val) {
+        switch (val.index()) {
             default:
-            case variant_index<null_data, poly_data>: return node_data_type::NULL_DATA;
-            case variant_index<dir, poly_data>: return node_data_type::DIR;
-            case variant_index<object, poly_data>: return node_data_type::OBJ;
+            case variant_index<null_data, data>: return node_data_type::NULL_DATA;
+            case variant_index<dir, data>: return node_data_type::DIR;
+            case variant_index<soft_link, data>: return node_data_type::SOFT_LINK;
+            case variant_index<text_file, data>: return node_data_type::TEXTFILE;
         }
     }
 
-    node_data() : id(node_data_id_null), data(null_data()) {
+    static constexpr inline node_data_id data_id(const node_data &val) {
+        return std::visit([&](auto &obj) { return obj.id; }, val);
     }
 
-    explicit node_data(node_data_id id)
-        : id(id), data(null_data()) {
+    template<typename T>
+    static constexpr inline T* get_ptr(const node_data &val) {
+        return (T*) std::get_if<T>(&val);
+    }
+
+    node_data() : data(null_data()) {
+    }
+
+    explicit node_data(const data &val)
+        : data(val) {
     }
 
     node_data(const node_data &other)
-        : id(other.id),
-          data(other.data) {
+        : data(other) {
     }
 
     node_data(node_data &&other) noexcept
-        : id(other.id),
-          data(std::move(other.data)) {
+        : data(std::move(other)) {
     }
 
     node_data &operator=(const node_data &other) {
         if (this == &other)
             return *this;
-        id = other.id;
-        data = other.data;
+        data::operator =(other);
         return *this;
     }
 
     node_data &operator=(node_data &&other) noexcept {
         if (this == &other)
             return *this;
-        id = other.id;
-        data = std::move(other.data);
+        data::operator =(std::move(other));
         return *this;
     }
 };

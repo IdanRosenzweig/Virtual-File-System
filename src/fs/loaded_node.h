@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <memory>
-#include "src/hierarchy/base/node/node.h"
+#include "src/hierarchy/node/node.h"
 
 struct fs;
 

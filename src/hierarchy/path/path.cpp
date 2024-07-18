@@ -1,21 +1,21 @@
 #include "path.h"
 
-std::pair<bool, path> parse_path(const std::string &str) {
+path parse_path(const std::string &str) {
     int n = str.size();
 
-    std::pair<bool, path> res;
+    path path;
 
     int curr_in = 0;
     if (str[curr_in] == '/') {
-        res.first = true;
+        // root = true
         curr_in++;
-    } else res.first = false;
+    } // else root = false
 
     path_comp curr_comp;
     while (curr_in < n) {
         if (str[curr_in] == '/') {
             if (!curr_comp.empty()) {
-                res.second.push_back(curr_comp);
+                path.push_back(curr_comp);
                 curr_comp.clear();
                 curr_in++;
             }
@@ -23,7 +23,7 @@ std::pair<bool, path> parse_path(const std::string &str) {
             curr_comp.push_back((uint8_t) str[curr_in++]);
         }
     }
-    if (!curr_comp.empty()) res.second.push_back(curr_comp);
+    if (!curr_comp.empty()) path.push_back(curr_comp);
 
-    return res;
+    return path;
 }

@@ -3,7 +3,15 @@
 
 #include <cstddef>
 
-struct null_data {
+#include "../base_data.h"
+
+struct null_data : public base_data {
+
+    null_data() : base_data() {}
+
+    explicit null_data(node_data_id id)
+        : base_data(id) {
+    }
 
     friend bool operator==(const null_data &lhs, const null_data &rhs) {
         return true;
