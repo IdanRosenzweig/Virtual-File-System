@@ -25,10 +25,6 @@ struct dir : public base_data {
     dir() : base_data() {
     }
 
-    explicit dir(node_data_id id)
-        : base_data(id) {
-    }
-
     dir(const dir &other)
         : base_data(other),
           children(other.children),

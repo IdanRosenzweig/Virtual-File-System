@@ -7,13 +7,13 @@ void dir::add_child_to_dir(fs *fs, dir *dir, node_id id, bool add_to_refs) {
 
     dir->children.insert(id);
 
-    loaded_node node(fs->stat_node(id));
-    trie::add_string(&dir->trie_root, node.ptr->name.data(), node.ptr->name.size())->data = id;
+    std::unique_ptr<node> node(fs->stat_node(id));
+    trie::add_string(&dir->trie_root, node->name.data(), node->name.size())->data = id;
 
     if (add_to_refs) {
-        auto refs = fs->read_node_refs(id);
+        auto refs = fs->driver->read_node_refs(id);
         refs->dirs.insert(dir->id);
-        fs->write_node_refs(refs.get());
+        fs->driver->write_node_refs(refs.get());
     }
 }
 
@@ -21,13 +21,13 @@ void dir::remove_child_from_dir(fs *fs, dir *dir, node_id id, bool remove_from_r
     if (!dir->children.count(id)) return;
 
     dir->children.erase(id);
-    loaded_node node(fs->stat_node(id));
-    trie::remove_string(&dir->trie_root, node.ptr->name.data(), node.ptr->name.size());
+    std::unique_ptr<node> node(fs->stat_node(id));
+    trie::remove_string(&dir->trie_root, node->name.data(), node->name.size());
 
     if (remove_from_refs) {
-        auto refs = fs->read_node_refs(fs->read_node(id).ptr->refs_id);
+        auto refs = fs->driver->read_node_refs(fs->driver->read_node(id)->refs_id);
         refs->dirs.erase(dir->id);
-        fs->write_node_refs(refs.get());
+        fs->driver->write_node_refs(refs.get());
     }
 }
 

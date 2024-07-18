@@ -15,10 +15,6 @@ struct soft_link : public base_data {
     soft_link() : path_ptr() {
     }
 
-    explicit soft_link(const path &path_ptr)
-        : path_ptr(path_ptr) {
-    }
-
     soft_link(const soft_link &other)
         : base_data(other),
           path_ptr(other.path_ptr) {

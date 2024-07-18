@@ -2,11 +2,16 @@
 #include <iostream>
 #include <string.h>
 
-#include "samples/ramfs.h"
+#include "drivers/fs_ram_driver.h"
+#include "fss/tmpfs.h"
 
-ramfs fs(1); // sample ram file system
+fs_ram_driver driver; // sample ram fs driver
+tmpfs fs(10, &driver); // sample tmp filesystem
 
 int main() {
+
+    printf("sizeof: %llu\n", sizeof(data));
+
     node_id bin_node = fs.mk_dir(fs.get_root_node_id(), parse_path("/bin"));
 
     text_file file1;
@@ -22,7 +27,9 @@ int main() {
     node_id usr_node = fs.mk_dir(fs.get_root_node_id(), parse_path("/usr"));
     node_id home_node = fs.mk_dir(fs.get_root_node_id(), parse_path("/home/user"));
 
-    fs.mk_softlink(home_node, parse_path("bin"), soft_link{parse_path("/bin/")});
+    soft_link link;
+    link.path_ptr = parse_path("/bin/");
+    fs.mk_softlink(home_node, parse_path("bin"), link);
 
     {
         auto file = fs.open_textfile(fs.search_path(fs.get_root_node_id(), parse_path("/home/user/bin/runme")));

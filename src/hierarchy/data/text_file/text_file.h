@@ -8,14 +8,10 @@
 #include "../base_data.h"
 
 struct text_file : public base_data {
-#define TEXT_FILE_MAX_SZ 100
+#define TEXT_FILE_MAX_SZ 600
     uint8_t text[TEXT_FILE_MAX_SZ] = {0};
 
     text_file() : base_data() {}
-
-    explicit text_file(node_data_id id)
-        : base_data(id) {
-    }
 
     text_file(const text_file &other)
         : base_data(other) {

@@ -2,6 +2,7 @@
 #define NODE_DATA_H
 
 #include <variant>
+#include "lib/lib_common.h"
 
 #include "node_data_id.h"
 
@@ -9,12 +10,14 @@
 #include "dir/dir.h"
 #include "soft_link/soft_link.h"
 #include "text_file/text_file.h"
+#include "mount/mount.h"
 
 enum class node_data_type {
-    NULL_DATA, DIR, SOFT_LINK, TEXTFILE
+    NULL_DATA, DIR, SOFT_LINK, TEXTFILE, MOUNT
 };
 
-using data = std::variant<null_data, dir, soft_link, text_file>; // polymorphic data
+// all possible types of node data
+using data = std::variant<null_data, dir, soft_link, text_file, mount>; // polymorphic data
 
 struct node_data : public data {
     static constexpr inline node_data_type data_type(const node_data &val) {
@@ -24,6 +27,7 @@ struct node_data : public data {
             case variant_index<dir, data>: return node_data_type::DIR;
             case variant_index<soft_link, data>: return node_data_type::SOFT_LINK;
             case variant_index<text_file, data>: return node_data_type::TEXTFILE;
+            case variant_index<mount, data>: return node_data_type::MOUNT;
         }
     }
 

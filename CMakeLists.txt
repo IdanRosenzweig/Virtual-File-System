@@ -39,18 +39,20 @@ add_executable(vfs
         # fs
         src/fs/fs.h
         src/fs/fs.cpp
-        src/fs/loaded_node.h
 
         lib/id_manager.h
         lib/lib_common.h
 
-        samples/ramfs.cpp
-        samples/ramfs.h
+        drivers/fs_ram_driver.cpp
+        drivers/fs_ram_driver.h
 
-        samples/ext4_fs.cpp
-        samples/ext4_fs.h
+        drivers/ext4_fs.cpp
+        drivers/ext4_fs.h
 
         main/test.cpp
         src/fs/fs_id.h
+        src/fs/fs_driver_ops.h
+        fss/tmpfs.cpp
+        fss/tmpfs.h
 
 )
