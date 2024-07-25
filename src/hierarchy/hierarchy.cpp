@@ -335,16 +335,16 @@ ctx_t<node_id_t> hierarchy::cp_mount(ctx_t<node_id_t> ctx, const path &src, cons
 }
 
 ctx_t<node_id_t> hierarchy::mk_textfile(ctx_t<node_id_t> ctx, const path &p) noexcept {
-    return mk_node(ctx, p, comp(textfile()), content(null_content()), true);
+    return mk_node(ctx, p, comp(null_comp()), content(textfile()), true);
 }
 
 ctx_t<std::unique_ptr<textfile> > hierarchy::open_textfile(ctx_t<node_id_t> ctx) noexcept {
-    return read_comp<textfile>(stat_comp_id(ctx));
+    return read_content<textfile>(stat_content_id(ctx));
 }
 
 void hierarchy::close_textfile(hierarchy *fs, textfile *file) noexcept {
-    comp temp{comp_data{*file}};
-    fs->driver->write_comp(&temp);
+    content temp{content_data{*file}};
+    fs->driver->write_content(&temp);
 }
 
 ctx_t<std::unique_ptr<ctl_dev_pt>> hierarchy::stat_ctl_dev_pt(ctx_t<node_id_t> ctx) noexcept {

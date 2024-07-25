@@ -5,21 +5,21 @@
 #include <string.h>
 #include <utility>
 
-#include "../base_comp.h"
+#include "../base_content.h"
 
-struct textfile : public base_comp {
+struct textfile : public base_content {
 #define TEXTFILE_MAX_SZ 600
     uint8_t text[TEXTFILE_MAX_SZ] = {0};
 
-    textfile() : base_comp() {}
+    textfile() : base_content() {}
 
     textfile(const textfile &other)
-        : base_comp(other) {
+        : base_content(other) {
         memcpy(text, other.text, TEXTFILE_MAX_SZ);
     }
 
     textfile(textfile &&other) noexcept
-        : base_comp(std::move(other)) {
+        : base_content(std::move(other)) {
         memcpy(text, other.text, TEXTFILE_MAX_SZ);
         memset(other.text, 0, TEXTFILE_MAX_SZ);
     }
@@ -27,7 +27,7 @@ struct textfile : public base_comp {
     textfile & operator=(const textfile &other) {
         if (this == &other)
             return *this;
-        base_comp::operator =(other);
+        base_content::operator =(other);
         memcpy(text, other.text, TEXTFILE_MAX_SZ);
         return *this;
     }
@@ -35,7 +35,7 @@ struct textfile : public base_comp {
     textfile & operator=(textfile &&other) noexcept {
         if (this == &other)
             return *this;
-        base_comp::operator =(std::move(other));
+        base_content::operator =(std::move(other));
         memcpy(text, other.text, TEXTFILE_MAX_SZ);
         memset(other.text, 0, TEXTFILE_MAX_SZ);
         return *this;

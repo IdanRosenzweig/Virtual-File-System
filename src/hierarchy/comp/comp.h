@@ -11,14 +11,13 @@
 #include "softlink/softlink.h"
 #include "hardlink/hardlink.h"
 #include "mount/mount.h"
-#include "textfile/textfile.h"
 
 enum class comp_type {
-    null, dir, softlink, hardlink, mount, textfile
+    null, dir, softlink, hardlink, mount
 };
 
 // all possible types of components
-using comp_data = std::variant<null_comp, dir, softlink, hardlink, mount, textfile>; // polymorphic data
+using comp_data = std::variant<null_comp, dir, softlink, hardlink, mount>; // polymorphic data
 
 struct comp : public comp_data {
     static constexpr inline comp_type get_type(const comp &val) {
@@ -29,7 +28,6 @@ struct comp : public comp_data {
             case variant_index<softlink, comp_data>: return comp_type::softlink;
             case variant_index<hardlink, comp_data>: return comp_type::hardlink;
             case variant_index<mount, comp_data>: return comp_type::mount;
-            case variant_index<textfile, comp_data>: return comp_type::textfile;
         }
     }
 

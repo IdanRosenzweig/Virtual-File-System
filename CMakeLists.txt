@@ -46,8 +46,8 @@ add_executable(vfs
 
         src/hierarchy/content/null_content/null_content.h
 
-        src/hierarchy/comp/textfile/textfile.cpp
-        src/hierarchy/comp/textfile/textfile.h
+        src/hierarchy/content/textfile/textfile.cpp
+        src/hierarchy/content/textfile/textfile.h
 
         src/hierarchy/comp/mount/mount.h
         src/hierarchy/comp/mount/mount.h
@@ -83,5 +83,6 @@ add_executable(vfs
         stream_devs/random_stream_dev.cpp
         stream_devs/random_stream_dev.h
         src/hierarchy/comp/hardlink/hardlink.cpp
+        src/hierarchy/comp/content/content_pt.h
 
 )
