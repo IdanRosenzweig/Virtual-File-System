@@ -3,14 +3,17 @@
 
 #include <queue>
 
-template <typename UNUM_T>
+#include "num_wrapper.h"
+
+template<typename UNUM_T>
 struct id_manager {
 private:
     UNUM_T next;
     std::queue<UNUM_T> freed;
 
 public:
-    id_manager(UNUM_T min_val) : next(min_val) {}
+    id_manager(UNUM_T min_val) : next(min_val) {
+    }
 
     UNUM_T generate_id() {
         UNUM_T id;

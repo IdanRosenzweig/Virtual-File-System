@@ -7,14 +7,14 @@
 #include "lib/lib_common.h"
 
 #include "node_id.h"
-#include "node_name.h"
+#include "src/hierarchy/path/path_comp.h"
 #include "src/hierarchy/comp/comp_id.h"
 #include "src/hierarchy/content/content_id.h"
 #include "src/hierarchy/refs/refs_id.h"
 
 struct node {
     node_id_t id = node_id_null; // constant, unique id given for each node
-    node_name name = node_name_null; // non unique name for the node
+    path_comp name = path_comp_null; // non unique name for the node
 
     comp_id_t comp_id = comp_id_null; // pointer to a unique component struct representing this node
 
@@ -41,7 +41,7 @@ struct node {
           refs_id(other.refs_id),
           content_id(other.content_id) {
         other.id = node_id_null;
-        other.name = node_name_null;
+        other.name = path_comp_null;
         other.comp_id = comp_id_null;
         other.refs_id = refs_id_null;
         other.content_id = content_id_null;
@@ -67,7 +67,7 @@ struct node {
         refs_id = other.refs_id;
         content_id = other.content_id;
         other.id = node_id_null;
-        other.name = node_name_null;
+        other.name = path_comp_null;
         other.comp_id = comp_id_null;
         other.refs_id = refs_id_null;
         other.content_id = content_id_null;

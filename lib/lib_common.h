@@ -1,7 +1,6 @@
 #ifndef LIB_COMMON_H
 #define LIB_COMMON_H
 
-#include <type_traits>
 #include <cstddef>
 #include <variant>
 

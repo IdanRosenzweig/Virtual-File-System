@@ -3,7 +3,7 @@
 path parse_path(const std::string &str) {
     int n = str.size();
 
-    path path;
+    path p;
 
     int curr_in = 0;
     if (str[curr_in] == '/') {
@@ -15,7 +15,7 @@ path parse_path(const std::string &str) {
     while (curr_in < n) {
         if (str[curr_in] == '/') {
             if (!curr_comp.empty()) {
-                path.push_back(curr_comp);
+                p.push_back(curr_comp);
                 curr_comp.clear();
                 curr_in++;
             }
@@ -23,7 +23,7 @@ path parse_path(const std::string &str) {
             curr_comp.push_back((uint8_t) str[curr_in++]);
         }
     }
-    if (!curr_comp.empty()) path.push_back(curr_comp);
+    if (!curr_comp.empty()) p.push_back(curr_comp);
 
-    return path;
+    return std::move(p);
 }

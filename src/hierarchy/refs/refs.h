@@ -9,8 +9,8 @@
 struct refs {
     refs_id_t id = refs_id_null;
 
-    std::set<node_id_t> dirs;
-    // hard links? ...
+    std::set<ctx_t<comp_id_t>> dirs;
+    std::set<ctx_t<comp_id_t>> hardlinks;
 
     refs() = default;
 

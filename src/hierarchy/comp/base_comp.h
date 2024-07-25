@@ -3,7 +3,7 @@
 
 #include "comp_id.h"
 
-struct basic_hierarchy;
+struct hierarchy;
 
 struct base_comp {
     comp_id_t id = comp_id_null;

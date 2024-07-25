@@ -7,24 +7,24 @@
 #include "content_id.h"
 
 #include "null_content/null_content.h"
-#include "textfile/textfile.h"
-#include "mount/mount.h"
-
+// #include "textfile/textfile.h"
+#include "ctl_dev/ctl_dev_pt.h"
+#include "stream_dev/stream_dev_pt.h"
 
 enum class content_type {
-    NULL_CONTENT, TEXTFILE, MOUNT
+    null, textfile, ctl_dev, stream_dev
 };
 
 // all possible types of content data
-using content_data = std::variant<null_content, textfile, mount>; // polymorphic data
+using content_data = std::variant<null_content, ctl_dev_pt, stream_dev_pt>; // polymorphic data
 
 struct content : public content_data {
     static constexpr inline content_type get_type(const content &val) {
         switch (val.index()) {
             default:
-            case variant_index<null_content, content_data>: return content_type::NULL_CONTENT;
-            case variant_index<textfile, content_data>: return content_type::TEXTFILE;
-            case variant_index<mount, content_data>: return content_type::MOUNT;
+            case variant_index<null_content, content_data>: return content_type::null;
+            case variant_index<ctl_dev_pt, content_data>: return content_type::ctl_dev;
+            case variant_index<stream_dev_pt, content_data>: return content_type::stream_dev;
         }
     }
 

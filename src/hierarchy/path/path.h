@@ -3,11 +3,10 @@
 
 #include <vector>
 #include <string>
+#include "path_comp.h"
 
-#include "../node/node_name.h"
-
-using path_comp = node_name;
 using path = std::vector<path_comp>;
+// using path = std::basic_string<path_comp>;
 
 path parse_path(const std::string& str);
 

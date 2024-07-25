@@ -5,22 +5,25 @@
 #include <vector>
 #include <set>
 #include <string>
+#include <memory>
 
 #include "lib/trie.h"
 
 #include "../base_comp.h"
+#include "src/hierarchy/ctx_t.h"
+#include "src/hierarchy/node/node_id.h"
 #include "src/hierarchy/path/path.h"
 
-struct basic_hierarchy;
+struct comp;
 
 // a node that points to multiple child nodes
 struct dir : public base_comp {
     // the actual children stored in this dir
-    std::set<comp_id_t> children;
+    std::set<ctx_t<node_id_t>> children;
 
     // a trie to associate strings with children
     static constexpr auto TRIE_ASSIGN = [](const uint8_t *val) -> int { return *val - 'a'; };
-    typedef trie_node<uint8_t, comp_id_t, 'z' - 'a' + 1, TRIE_ASSIGN> trie;
+    typedef trie_node<uint8_t, ctx_t<node_id_t>, 'z' - 'a' + 1, TRIE_ASSIGN> trie;
     trie trie_root;
 
     dir() = default;
@@ -59,15 +62,15 @@ struct dir : public base_comp {
         return *this;
     }
 
-    static void add_child_to_dir(basic_hierarchy *fs, dir *dir, comp_id_t id, bool add_to_refs);
+    static void add_child_to_dir(const ctx_t<std::unique_ptr<comp>>& dir_comp, ctx_t<node_id_t> child, bool add_to_refs);
 
-    static void remove_child_from_dir(basic_hierarchy *fs, dir *dir, comp_id_t id, bool remove_from_refs);
+    static void remove_child_from_dir(const ctx_t<std::unique_ptr<comp>>& dir_comp, ctx_t<node_id_t> child, bool remove_from_refs);
 
-    static bool has_child(basic_hierarchy *fs, dir *dir, comp_id_t id);
+    static bool has_child(const ctx_t<std::unique_ptr<comp>> &dir_comp, ctx_t<node_id_t> child);
 
-    static std::vector<comp_id_t> get_all_children(basic_hierarchy *fs, dir *dir);
+    static std::vector<ctx_t<node_id_t>> get_all_children(const ctx_t<std::unique_ptr<comp>> &dir_comp);
 
-    static comp_id_t search_path_comp(basic_hierarchy *fs, dir *dir, const path_comp &comp);
+    static ctx_t<node_id_t> search_path_comp(const ctx_t<std::unique_ptr<comp>>& dir_comp, const path_comp &comp);
 };
 
 

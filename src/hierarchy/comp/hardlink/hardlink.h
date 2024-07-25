@@ -1,34 +1,40 @@
-#ifndef SOFTLINK_H
-#define SOFTLINK_H
+#ifndef HARDLINK_H
+#define HARDLINK_H
 
+#include <memory>
 #include <vector>
 
 #include "../base_comp.h"
 #include "src/hierarchy/ctx_t.h"
-#include "src/hierarchy/path/path.h"
+#include "src/hierarchy/node/node_id.h"
+
+struct comp;
 
 // a node that points to another path
-struct softlink : public base_comp {
-    ctx_t<path> target;
+struct hardlink : public base_comp {
+    ctx_t<node_id_t> target;
 
-    softlink() : base_comp(), target() {
+    hardlink() = default;
+
+    explicit hardlink(comp_id_t id)
+        : base_comp(id) {
     }
 
-    explicit softlink(const ctx_t<path> &target)
+    explicit hardlink(const ctx_t<node_id_t> &target)
         : target(target) {
     }
 
-    softlink(const softlink &other)
+    hardlink(const hardlink &other)
         : base_comp(other),
           target(other.target) {
     }
 
-    softlink(softlink &&other) noexcept
+    hardlink(hardlink &&other) noexcept
         : base_comp(std::move(other)),
           target(std::move(other.target)) {
     }
 
-    softlink & operator=(const softlink &other) {
+    hardlink & operator=(const hardlink &other) {
         if (this == &other)
             return *this;
         base_comp::operator =(other);
@@ -36,14 +42,16 @@ struct softlink : public base_comp {
         return *this;
     }
 
-    softlink & operator=(softlink &&other) noexcept {
+    hardlink & operator=(hardlink &&other) noexcept {
         if (this == &other)
             return *this;
         base_comp::operator =(std::move(other));
         target = std::move(other.target);
         return *this;
     }
+
+    static void nullify_link(const ctx_t<std::unique_ptr<comp>>& link_comp, bool update_reference);
 };
 
 
-#endif //SOFTLINK_H
+#endif //HARDLINK_H
