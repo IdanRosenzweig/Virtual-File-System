@@ -15,7 +15,6 @@
 struct hierarchy {
     friend struct dir;
     friend struct softlink;
-    friend struct hardlink;
 
 protected:
     basic_driver *driver;
@@ -70,7 +69,7 @@ protected:
     static ctx_t<node_id_t> mk_path(ctx_t<node_id_t> ctx, const path &p, const std::vector<comp_data> &comp_vals,
                                     const std::vector<content_data> &content_vals) noexcept;
 
-    static ctx_t<node_id_t> evaluate_ctx(ctx_t<node_id_t> ctx, bool follow_curr_softlink, bool follow_curr_hardlink, bool follow_curr_mount) noexcept;
+    static ctx_t<node_id_t> evaluate_ctx(ctx_t<node_id_t> ctx, bool follow_curr_softlink, bool follow_curr_mount) noexcept;
 
     template <typename T>
     static ctx_t<std::unique_ptr<T>> read_comp(ctx_t<comp_id_t> ctx) {
@@ -95,13 +94,11 @@ public:
 
     /** search for a node by a path */
     // search the path going down from the given root node
-    static ctx_t<node_id_t> search_node(ctx_t<node_id_t> ctx, const path &p, bool follow_softlink_at_end = true, bool follow_curr_hardlink = true,
-                                        bool follow_mount_at_end = true) noexcept;
+    static ctx_t<node_id_t> search_node(ctx_t<node_id_t> ctx, const path &p, bool follow_softlink_at_end = true, bool follow_mount_at_end = true) noexcept;
 
     /** test if a path exists (points to a valid node) */
-    static inline bool node_exist(ctx_t<node_id_t> ctx, const path &p, bool follow_softlink_at_end, bool follow_hardlink_at_end,
-                                   bool follow_mount_at_end) noexcept {
-        return !is_ctx_null(search_node(ctx, p, follow_softlink_at_end, follow_hardlink_at_end, follow_mount_at_end));
+    static inline bool node_exist(ctx_t<node_id_t> ctx, const path &p, bool follow_softlink_at_end, bool follow_mount_at_end) noexcept {
+        return !is_ctx_null(search_node(ctx, p, follow_softlink_at_end, follow_mount_at_end));
     }
 
     /** retrieve info about a node */
@@ -137,11 +134,6 @@ public:
     static ctx_t<std::unique_ptr<softlink>> stat_softlink(ctx_t<node_id_t> ctx) noexcept;
 
     static ctx_t<node_id_t> mk_softlink(ctx_t<node_id_t> ctx, const path &p, const softlink &link) noexcept;
-
-    /** hardlink specific funcs */
-    static ctx_t<std::unique_ptr<hardlink>> stat_hardlink(ctx_t<node_id_t> ctx) noexcept;
-
-    static ctx_t<node_id_t> mk_hardlink(ctx_t<node_id_t> ctx, const path &p, const hardlink &link) noexcept;
 
     /** mount specific funcs */
     static ctx_t<std::unique_ptr<mount>> stat_mount(ctx_t<node_id_t> ctx) noexcept;

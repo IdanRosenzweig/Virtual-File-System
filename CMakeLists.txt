@@ -33,8 +33,6 @@ add_executable(vfs
 
         src/hierarchy/comp/softlink/softlink.h
 
-        src/hierarchy/comp/hardlink/hardlink.h
-
         # refs
         src/hierarchy/refs/refs.h
         src/hierarchy/refs/refs_id.h
@@ -82,7 +80,7 @@ add_executable(vfs
         src/hierarchy/content/block_dev/block_dev.h
         stream_devs/random_stream_dev.cpp
         stream_devs/random_stream_dev.h
-        src/hierarchy/comp/hardlink/hardlink.cpp
+
         src/hierarchy/comp/content/content_pt.h
 
 )

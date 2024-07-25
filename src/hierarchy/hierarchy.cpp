@@ -8,7 +8,7 @@ ctx_t<node_id_t> hierarchy::mk_direct_node(ctx_t<node_id_t> ctx, const path_comp
     if (is_ctx_null(ctx) || !ctx.hier->driver->has_node(ctx.val)) return null_ctx<node_id_t>();
 
     // preevaluate current context
-    ctx = evaluate_ctx(ctx, true, true, true);
+    ctx = evaluate_ctx(ctx, true, true);
     if (is_ctx_null(ctx)) return null_ctx<node_id_t>();
 
     auto node_comp = ctx_t(ctx.hier, ctx.hier->driver->read_comp(ctx.hier->driver->read_node(ctx.val)->comp_id));
@@ -58,8 +58,8 @@ ctx_t<node_id_t> hierarchy::mk_direct_node(ctx_t<node_id_t> ctx, const path_comp
 }
 
 ctx_t<node_id_t> hierarchy::mk_path(ctx_t<node_id_t> ctx, const path &p,
-                                          const std::vector<comp_data> &comp_vals,
-                                          const std::vector<content_data> &content_vals) noexcept {
+                                    const std::vector<comp_data> &comp_vals,
+                                    const std::vector<content_data> &content_vals) noexcept {
     if (p.empty()) return ctx;
 
     for (int i = 0; i < p.size() && !is_ctx_null(ctx); i++)
@@ -69,7 +69,7 @@ ctx_t<node_id_t> hierarchy::mk_path(ctx_t<node_id_t> ctx, const path &p,
 }
 
 ctx_t<node_id_t>
-hierarchy::evaluate_ctx(ctx_t<node_id_t> ctx, bool follow_curr_softlink, bool follow_curr_hardlink, bool follow_curr_mount) noexcept {
+hierarchy::evaluate_ctx(ctx_t<node_id_t> ctx, bool follow_curr_softlink, bool follow_curr_mount) noexcept {
     while (!is_ctx_null(ctx) && ctx.hier->driver->has_node(ctx.val)) {
         comp_id_t comp_id = ctx.hier->driver->read_node(ctx.val)->comp_id;
         comp_type comp_type = ctx.hier->driver->read_comp_type(comp_id);
@@ -82,13 +82,6 @@ hierarchy::evaluate_ctx(ctx_t<node_id_t> ctx, bool follow_curr_softlink, bool fo
                 auto link_ptr = comp::get_ptr<softlink>(comp.get());
                 ctx = search_node(link_ptr->target.hier->get_root_ctx(), link_ptr->target.val,
                                   true, true);
-                break;
-            }
-            case comp_type::hardlink: {
-                if (!follow_curr_hardlink) goto eval_end;
-                auto comp = ctx.hier->driver->read_comp(comp_id);
-                auto link_ptr = comp::get_ptr<hardlink>(comp.get());
-                ctx = link_ptr->target;
                 break;
             }
             case comp_type::mount: {
@@ -107,14 +100,15 @@ eval_end: {
 }
 
 ctx_t<node_id_t> hierarchy::mk_node(ctx_t<node_id_t> ctx, const path &p, const comp_data &comp_val,
-                                          const content_data &content_val, bool return_on_success) noexcept {
+                                    const content_data &content_val, bool return_on_success) noexcept {
     if (p.empty()) return return_on_success ? ctx_t<node_id_t>{} : ctx;
 
     for (int i = 0; i < p.size() - 1 && !is_ctx_null(ctx); i++)
         ctx = mk_direct_node(ctx, p[i], comp(dir()), content(null_content())); // make empty directories
     if (is_ctx_null(ctx))
         return null_ctx<node_id_t>();
-    if (ctx_t<node_id_t> child = search_node(ctx, path{p.back()}, true, true); !is_ctx_null(child)) // node already exists
+    if (ctx_t<node_id_t> child = search_node(ctx, path{p.back()}, true, true); !is_ctx_null(child))
+        // node already exists
         return return_on_success ? ctx_t<node_id_t>{} : child;
 
     return mk_direct_node(ctx, p.back(), comp_val, content_val);
@@ -126,15 +120,9 @@ void hierarchy::rm_node(ctx_t<node_id_t> ctx, bool recursive) noexcept {
     auto refs = ctx.hier->driver->read_refs(node->refs_id);
 
     // update dirs which point to this node
-    for (const ctx_t<comp_id_t>& dir_ref: refs->dirs) {
+    for (const ctx_t<comp_id_t> &dir_ref: refs->dirs) {
         auto dir_comp = read_comp(dir_ref);
         dir::remove_child_from_dir(dir_comp, ctx, false);
-    }
-
-    // nullify hardlinks which point to this node
-    for (const ctx_t<comp_id_t>& hardlink_ref: refs->hardlinks) {
-        auto hardlink_comp = read_comp(hardlink_ref);
-        hardlink::nullify_link(hardlink_comp, false);
     }
 
     switch (comp::get_type(*comp.val)) {
@@ -142,8 +130,6 @@ void hierarchy::rm_node(ctx_t<node_id_t> ctx, bool recursive) noexcept {
         case comp_type::null: return;
         case comp_type::softlink:
         case comp_type::mount: {
-
-
             ctx.hier->driver->deallocate_content(node->content_id); // deallocate the content
             ctx.hier->driver->deallocate_comp(node->comp_id); // deallocate the content
             ctx.hier->driver->deallocate_refs(node->refs_id); // deallocate the refs
@@ -154,7 +140,7 @@ void hierarchy::rm_node(ctx_t<node_id_t> ctx, bool recursive) noexcept {
             if (!recursive) return;
 
             // recursivly remove the child nodes
-            for (const ctx_t<node_id_t>& child: dir::get_all_children(comp))
+            for (const ctx_t<node_id_t> &child: dir::get_all_children(comp))
                 rm_node(child, recursive);
 
             ctx.hier->driver->deallocate_comp(node->comp_id); // deallocate the comp
@@ -166,13 +152,14 @@ void hierarchy::rm_node(ctx_t<node_id_t> ctx, bool recursive) noexcept {
     }
 }
 
-ctx_t<node_id_t> hierarchy::search_node(ctx_t<node_id_t> ctx, const path &p, bool follow_softlink_at_end,bool follow_hardlink_at_end,
-                                              bool follow_mount_at_end) noexcept {
+ctx_t<node_id_t> hierarchy::search_node(ctx_t<node_id_t> ctx, const path &p, bool follow_softlink_at_end,
+                                        bool follow_mount_at_end) noexcept {
     if (is_ctx_null(ctx) || !ctx.hier->driver->has_node(ctx.val)) return null_ctx<node_id_t>();
 
     for (int i = 0; i < p.size() && !is_ctx_null(ctx); i++) {
         // preevaluate current context
-        ctx = evaluate_ctx(ctx, (i != p.size() - 1) ? true : follow_softlink_at_end, (i != p.size() - 1 ? true : follow_hardlink_at_end), (i != p.size() - 1) ? true : follow_mount_at_end);
+        ctx = evaluate_ctx(ctx, (i != p.size() - 1) ? true : follow_softlink_at_end,
+                           (i != p.size() - 1) ? true : follow_mount_at_end);
 
         auto node_comp = ctx_t(ctx.hier, ctx.hier->driver->read_comp(ctx.hier->driver->read_node(ctx.val)->comp_id));
         switch (comp::get_type(*node_comp.val)) {
@@ -222,7 +209,7 @@ ctx_t<std::unique_ptr<comp> > hierarchy::read_comp(ctx_t<comp_id_t> ctx) noexcep
     return {ctx.hier, std::move(ctx.hier->driver->read_comp(ctx.val))};
 }
 
-ctx_t<std::unique_ptr<refs>> hierarchy::read_refs(ctx_t<refs_id_t> ctx) noexcept {
+ctx_t<std::unique_ptr<refs> > hierarchy::read_refs(ctx_t<refs_id_t> ctx) noexcept {
     return {ctx.hier, std::move(ctx.hier->driver->read_refs(ctx.val))};
 }
 
@@ -246,15 +233,7 @@ ctx_t<node_id_t> hierarchy::mk_softlink(ctx_t<node_id_t> ctx, const path &p, con
     return mk_node(ctx, p, link, content(null_content()), true);
 }
 
-ctx_t<std::unique_ptr<hardlink>> hierarchy::stat_hardlink(ctx_t<node_id_t> ctx) noexcept {
-    return read_comp<hardlink>(stat_comp_id(ctx));
-}
-
-ctx_t<node_id_t> hierarchy::mk_hardlink(ctx_t<node_id_t> ctx, const path &p, const hardlink &link) noexcept {
-    return mk_node(ctx, p, link, content(null_content()), true);
-}
-
-ctx_t<std::unique_ptr<mount>> hierarchy::stat_mount(ctx_t<node_id_t> ctx) noexcept {
+ctx_t<std::unique_ptr<mount> > hierarchy::stat_mount(ctx_t<node_id_t> ctx) noexcept {
     return read_comp<mount>(stat_comp_id(ctx));
 }
 
@@ -347,7 +326,7 @@ void hierarchy::close_textfile(hierarchy *fs, textfile *file) noexcept {
     fs->driver->write_content(&temp);
 }
 
-ctx_t<std::unique_ptr<ctl_dev_pt>> hierarchy::stat_ctl_dev_pt(ctx_t<node_id_t> ctx) noexcept {
+ctx_t<std::unique_ptr<ctl_dev_pt> > hierarchy::stat_ctl_dev_pt(ctx_t<node_id_t> ctx) noexcept {
     return read_content<ctl_dev_pt>(stat_content_id(ctx));
 }
 
@@ -355,7 +334,7 @@ ctx_t<node_id_t> hierarchy::mk_ctl_dev_pt(ctx_t<node_id_t> ctx, const path &p, c
     return mk_node(ctx, p, comp_data(null_comp()), content_data(pt), true);
 }
 
-ctx_t<std::unique_ptr<stream_dev_pt>> hierarchy::stat_stream_dev_pt(ctx_t<node_id_t> ctx) noexcept {
+ctx_t<std::unique_ptr<stream_dev_pt> > hierarchy::stat_stream_dev_pt(ctx_t<node_id_t> ctx) noexcept {
     return read_content<stream_dev_pt>(stat_content_id(ctx));
 }
 

@@ -1,4 +1,44 @@
 #ifndef CONTENT_PT_H
 #define CONTENT_PT_H
 
+#include <utility>
+
+#include "../base_comp.h"
+#include "src/hierarchy/content/content_id.h"
+
+struct content_pt : public base_comp {
+    content_id_t id = content_id_null;
+
+    content_pt() = default;
+
+    explicit content_pt(const comp_id_t &id)
+        : base_comp(id) {
+    }
+
+    content_pt(const content_pt &other)
+        : base_comp(other),
+          id(other.id) {
+    }
+
+    content_pt(content_pt &&other) noexcept
+        : base_comp(std::move(other)),
+          id(std::move(other.id)) {
+    }
+
+    content_pt & operator=(const content_pt &other) {
+        if (this == &other)
+            return *this;
+        base_comp::operator =(other);
+        id = other.id;
+        return *this;
+    }
+
+    content_pt & operator=(content_pt &&other) noexcept {
+        if (this == &other)
+            return *this;
+        base_comp::operator =(std::move(other));
+        id = std::move(other.id);
+        return *this;
+    }
+};
 #endif //CONTENT_PT_H

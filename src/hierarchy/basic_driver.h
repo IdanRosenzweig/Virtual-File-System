@@ -11,7 +11,6 @@
 struct basic_driver {
     friend struct dir;
     friend struct softlink;
-    friend struct hardlink;
     friend struct textfile;
 
     /** internal driver related functions that abstracts the hier logic */
