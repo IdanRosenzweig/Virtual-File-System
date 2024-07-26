@@ -22,7 +22,7 @@ add_executable(vfs
         src/hierarchy/path/path_comp.h
 
         # comps
-        src/hierarchy/comp/comp.h
+        src/hierarchy/comp/comp_t.h
         src/hierarchy/comp/comp_id.h
         src/hierarchy/comp/base_comp.h
 
@@ -34,11 +34,11 @@ add_executable(vfs
         src/hierarchy/comp/softlink/softlink.h
 
         # refs
-        src/hierarchy/refs/refs.h
+        src/hierarchy/refs/refs_t.h
         src/hierarchy/refs/refs_id.h
 
         # content
-        src/hierarchy/content/content.h
+        src/hierarchy/content/content_t.h
         src/hierarchy/content/content_id.h
         src/hierarchy/content/base_content.h
 

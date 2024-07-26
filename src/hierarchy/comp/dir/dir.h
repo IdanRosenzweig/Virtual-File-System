@@ -14,12 +14,12 @@
 #include "src/hierarchy/node/node_id.h"
 #include "src/hierarchy/path/path.h"
 
-struct comp;
+struct comp_t;
 
 // a node that points to multiple child nodes
 struct dir : public base_comp {
     // the actual children stored in this dir
-    std::set<ctx_t<node_id_t>> children;
+    std::set<ctx_t<node_id_t> > children;
 
     // a trie to associate strings with children
     static constexpr auto TRIE_ASSIGN = [](const uint8_t *val) -> int { return *val - 'a'; };
@@ -62,15 +62,15 @@ struct dir : public base_comp {
         return *this;
     }
 
-    static void add_child_to_dir(const ctx_t<std::unique_ptr<comp>>& dir_comp, ctx_t<node_id_t> child, bool add_to_refs);
+    static void add_child_to_dir(ctx_t<comp_t> &dir_comp, ctx_t<node_id_t> child, bool add_to_refs);
 
-    static void remove_child_from_dir(const ctx_t<std::unique_ptr<comp>>& dir_comp, ctx_t<node_id_t> child, bool remove_from_refs);
+    static void remove_child_from_dir(ctx_t<comp_t> &dir_comp, ctx_t<node_id_t> child, bool remove_from_refs);
 
-    static bool has_child(const ctx_t<std::unique_ptr<comp>> &dir_comp, ctx_t<node_id_t> child);
+    static bool has_child(comp_t *dir_comp, ctx_t<node_id_t> child);
 
-    static std::vector<ctx_t<node_id_t>> get_all_children(const ctx_t<std::unique_ptr<comp>> &dir_comp);
+    static std::vector<ctx_t<node_id_t> > get_all_children(comp_t *dir_comp);
 
-    static ctx_t<node_id_t> search_path_comp(const ctx_t<std::unique_ptr<comp>>& dir_comp, const path_comp &comp);
+    static ctx_t<node_id_t> search_path_comp(comp_t *dir_comp, const path_comp &comp);
 };
 
 

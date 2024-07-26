@@ -31,7 +31,7 @@ struct ctx_t {
           val(std::move(other.val)) {
     }
 
-    ctx_t & operator=(const ctx_t &other) {
+    ctx_t &operator=(const ctx_t &other) {
         if (this == &other)
             return *this;
         hier = other.hier;
@@ -39,7 +39,7 @@ struct ctx_t {
         return *this;
     }
 
-    ctx_t & operator=(ctx_t &&other) noexcept {
+    ctx_t &operator=(ctx_t &&other) noexcept {
         if (this == &other)
             return *this;
         hier = other.hier;
@@ -76,13 +76,13 @@ struct ctx_t {
 
 // wrappers for creating null ctx
 template<typename T>
-ctx_t<T> null_ctx() {return ctx_t<T>();}
+ctx_t<T> null_ctx() { return ctx_t<T>(); }
 
 template<typename T>
-ctx_t<T> null_ctx(const T& val) {return ctx_t<T>(nullptr, val);}
+ctx_t<T> null_ctx(const T &val) { return ctx_t<T>(nullptr, val); }
 
 template<typename T>
-ctx_t<T> null_ctx(T&& val) {return ctx_t<T>(nullptr, std::move(val));}
+ctx_t<T> null_ctx(T &&val) { return ctx_t<T>(nullptr, std::move(val)); }
 
 // wrapper for checking null ctx
 template<typename T>

@@ -25,7 +25,7 @@ struct content_pt : public base_comp {
           ptr(std::move(other.ptr)) {
     }
 
-    content_pt & operator=(const content_pt &other) {
+    content_pt &operator=(const content_pt &other) {
         if (this == &other)
             return *this;
         base_comp::operator =(other);
@@ -33,7 +33,7 @@ struct content_pt : public base_comp {
         return *this;
     }
 
-    content_pt & operator=(content_pt &&other) noexcept {
+    content_pt &operator=(content_pt &&other) noexcept {
         if (this == &other)
             return *this;
         base_comp::operator =(std::move(other));

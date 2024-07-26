@@ -6,14 +6,14 @@
 #include "refs_id.h"
 #include "src/hierarchy/node/node_id.h"
 
-struct refs {
+struct refs_t {
     refs_id_t id = refs_id_null;
 
     std::set<ctx_t<comp_id_t>> dirs;
 
-    refs() = default;
+    refs_t() = default;
 
-    explicit refs(refs_id_t id): id(id) {
+    explicit refs_t(refs_id_t id): id(id) {
     }
 };
 

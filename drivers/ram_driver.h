@@ -14,14 +14,15 @@ private:
     id_manager<content_id_t> content_id_gen;
 
     // the implemenntation for allocating and freeing nodes would just be allocating nodes locally on the ram and searching them using search tree
-    std::map<node_id_t, node> nodes_pool;
-    std::map<comp_id_t, comp> comps_pool;
-    std::map<refs_id_t, refs> refs_pool;
-    std::map<content_id_t, content> content_pool;
+    std::map<node_id_t, node_t> nodes_pool;
+    std::map<comp_id_t, comp_t> comps_pool;
+    std::map<refs_id_t, refs_t> refs_pool;
+    std::map<content_id_t, content_t> content_pool;
 
 public:
     explicit ram_driver()
-        : nodes_id_gen(min_accessable_node_id), comps_id_gen(min_accessable_comp_id), refs_id_gen(min_accessable_refs_id),
+        : nodes_id_gen(min_accessable_node_id), comps_id_gen(min_accessable_comp_id),
+          refs_id_gen(min_accessable_refs_id),
           content_id_gen(min_accessable_content_id) {
         // no need to provide some device or hardware in the constructor, will just allocate locally on the ram
     }
@@ -33,9 +34,9 @@ public:
 
     bool has_node(node_id_t id) noexcept override;
 
-    std::unique_ptr<node> read_node(node_id_t id) noexcept override;
+    void read_node(node_id_t id, node_t *dest) noexcept override;
 
-    void write_node(const node *node) noexcept override;
+    void write_node(const node_t *node) noexcept override;
 
 
     comp_id_t allocate_comp() noexcept override;
@@ -46,9 +47,9 @@ public:
 
     comp_type read_comp_type(comp_id_t id) noexcept override;
 
-    std::unique_ptr<comp> read_comp(comp_id_t id) noexcept override;
+    void read_comp(comp_id_t id, comp_t *dest) noexcept override;
 
-    void write_comp(const comp *node) noexcept override;
+    void write_comp(const comp_t *node) noexcept override;
 
 
     refs_id_t allocte_refs() noexcept override;
@@ -57,9 +58,9 @@ public:
 
     bool has_refs(refs_id_t id) noexcept override;
 
-    std::unique_ptr<refs> read_refs(refs_id_t id) noexcept override;
+    void read_refs(refs_id_t id, refs_t *dest) noexcept override;
 
-    void write_refs(const refs *refs) noexcept override;
+    void write_refs(const refs_t *refs) noexcept override;
 
 
     content_id_t allocate_content() noexcept override;
@@ -70,9 +71,9 @@ public:
 
     content_type read_content_type(content_id_t id) noexcept override;
 
-    std::unique_ptr<content> read_content(content_id_t id) noexcept override;
+    void read_content(content_id_t id, content_t *dest) noexcept override;
 
-    void write_content(const content *data) noexcept override;
+    void write_content(const content_t *data) noexcept override;
 };
 
 

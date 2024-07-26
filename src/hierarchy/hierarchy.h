@@ -6,7 +6,7 @@
 #include "node/node.h"
 #include "node/node_id.h"
 #include "path/path.h"
-#include "content/content.h"
+#include "content/content_t.h"
 
 #include "basic_driver.h"
 #include "ctx_t.h"
@@ -29,17 +29,17 @@ public:
 
         // allocte a root node
         root_id = driver->allocte_node();
-        node root_node(root_id);
+        node_t root_node(root_id);
 
         // allocte a directory as the root comp
         comp_id_t comp_id = driver->allocate_comp();
         struct dir dir{};
         dir.id = comp_id;
-        comp root_dir{dir};
+        comp_t root_dir{dir};
 
         // allocte empty refs
         refs_id_t refs_id = driver->allocte_refs();
-        refs refs(refs_id);
+        refs_t refs(refs_id);
 
         // write the new node and all its data
         root_node.comp_id = comp_id;
@@ -85,25 +85,27 @@ protected:
 
 
     /** read component */
-    static ctx_t<std::unique_ptr<comp> > stat_comp(ctx_t<comp_id_t> ctx) noexcept;
+    static void stat_comp(ctx_t<comp_id_t> ctx, ctx_t<comp_t> *dest) noexcept;
 
     template<typename T>
-    static ctx_t<std::unique_ptr<T> > stat_comp(ctx_t<comp_id_t> ctx) {
-        auto comp = stat_comp(ctx);
-        return {ctx.hier, std::make_unique<T>(*comp::get_ptr<T>(comp.val.get()))};
+    static void stat_comp(ctx_t<comp_id_t> ctx, ctx_t<T> *dest) {
+        ctx_t<comp_t> comp;
+        stat_comp(ctx, &comp);
+        *dest = {ctx.hier, *comp_t::get_ptr<T>(&comp.val)};
     }
 
     /** read content */
-    static ctx_t<std::unique_ptr<content> > stat_content(ctx_t<content_id_t> ctx) noexcept;
+    static void stat_content(ctx_t<content_id_t> ctx, ctx_t<content_t> *dest) noexcept;
 
     template<typename T>
-    static ctx_t<std::unique_ptr<T> > stat_content(ctx_t<content_id_t> ctx) {
-        auto comp = stat_content(ctx);
-        return {ctx.hier, std::make_unique<T>(*content::get_ptr<T>(comp.val.get()))};
+    static void stat_content(ctx_t<content_id_t> ctx, ctx_t<T> *dest) {
+        ctx_t<content_t> content;
+        stat_content(ctx, &content);
+        *dest = {ctx.hier, *content_t::get_ptr<T>(&content.val)};
     }
 
     /** read references */
-    static ctx_t<std::unique_ptr<refs> > stat_refs(ctx_t<refs_id_t> ctx) noexcept; // read comp
+    static void stat_refs(ctx_t<refs_id_t> ctx, ctx_t<refs_t> *dest) noexcept; // read comp
 
 
     /*** filesystem API ***/
@@ -125,22 +127,22 @@ public:
                                   bool follow_mount_at_end) noexcept;
 
     // retrieve info about a node
-    static ctx_t<std::unique_ptr<node> > stat_node(ctx_t<node_id_t> ctx) noexcept;
+    static void stat_node(ctx_t<node_id_t> ctx, ctx_t<node_t> *dest) noexcept;
 
     /** directory specific funcs */
-    static ctx_t<std::unique_ptr<dir> > stat_dir(ctx_t<node_id_t> ctx) noexcept;
+    static void stat_dir(ctx_t<node_id_t> ctx, ctx_t<dir> *dest) noexcept;
 
     // search the path going down from the given root node, create any intermediate directory nodes if needed, and create an empty dir at the end
     // (this function is just a wrapper around mk_node)
     static ctx_t<node_id_t> mk_dir(ctx_t<node_id_t> ctx, const path &p) noexcept;
 
     /** softlink specific funcs */
-    static ctx_t<std::unique_ptr<softlink> > stat_softlink(ctx_t<node_id_t> ctx) noexcept;
+    static void stat_softlink(ctx_t<node_id_t> ctx, ctx_t<softlink> *dest) noexcept;
 
     static ctx_t<node_id_t> mk_softlink(ctx_t<node_id_t> ctx, const path &p, const softlink &link) noexcept;
 
     /** mount specific funcs */
-    static ctx_t<std::unique_ptr<mount> > stat_mount(ctx_t<node_id_t> ctx) noexcept;
+    static void stat_mount(ctx_t<node_id_t> ctx, ctx_t<mount> *dest) noexcept;
 
     static ctx_t<node_id_t> mk_mount(ctx_t<node_id_t> ctx, const path &p, const mount &mnt) noexcept;
 
@@ -151,7 +153,7 @@ public:
     // (this function is just a wrapper around mk_node)
     static ctx_t<node_id_t> mk_textfile(ctx_t<node_id_t> ctx, const path &p) noexcept;
 
-    static ctx_t<std::unique_ptr<textfile> > open_textfile(ctx_t<node_id_t> ctx) noexcept;
+    static void open_textfile(ctx_t<node_id_t> ctx, ctx_t<textfile> *dest) noexcept;
 
     static void close_textfile(hierarchy *fs, textfile *file) noexcept;
 

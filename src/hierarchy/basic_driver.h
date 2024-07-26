@@ -4,9 +4,9 @@
 #include <memory>
 
 #include "node/node.h"
-#include "comp/comp.h"
-#include "refs/refs.h"
-#include "content/content.h"
+#include "comp/comp_t.h"
+#include "refs/refs_t.h"
+#include "content/content_t.h"
 
 struct basic_driver {
     friend struct dir;
@@ -29,10 +29,10 @@ struct basic_driver {
 
     // read from the filesystem the current data of the node with the specific id.
     // return its data (allocated locally), or nullptr if node doesn't exist
-    virtual std::unique_ptr<node> read_node(node_id_t id) noexcept = 0;
+    virtual void read_node(node_id_t id, node_t*  dest) noexcept = 0;
 
     // update in the filesystem the corresponding data of the node with the specified id (if id exists)
-    virtual void write_node(const node *node) noexcept = 0;
+    virtual void write_node(const node_t *node) noexcept = 0;
 
     /* regarding components */
 
@@ -44,9 +44,9 @@ struct basic_driver {
 
     virtual comp_type read_comp_type(comp_id_t id) noexcept = 0;
 
-    virtual std::unique_ptr<comp> read_comp(comp_id_t id) noexcept = 0;
+    virtual void read_comp(comp_id_t id, comp_t*  dest) noexcept = 0;
 
-    virtual void write_comp(const comp *node) noexcept = 0;
+    virtual void write_comp(const comp_t *node) noexcept = 0;
 
     /* regarding references */
 
@@ -56,9 +56,9 @@ struct basic_driver {
 
     virtual bool has_refs(refs_id_t id) noexcept = 0;
 
-    virtual std::unique_ptr<refs> read_refs(refs_id_t id) noexcept = 0;
+    virtual void read_refs(refs_id_t id, refs_t*  dest) noexcept = 0;
 
-    virtual void write_refs(const refs *refs) noexcept = 0;
+    virtual void write_refs(const refs_t *refs) noexcept = 0;
 
     /* regarding content */
 
@@ -70,9 +70,9 @@ struct basic_driver {
 
     virtual content_type read_content_type(content_id_t id) noexcept = 0;
 
-    virtual std::unique_ptr<content> read_content(content_id_t id) noexcept = 0;
+    virtual void read_content(content_id_t id, content_t*  dest) noexcept = 0;
 
-    virtual void write_content(const content *node) noexcept = 0;
+    virtual void write_content(const content_t *node) noexcept = 0;
 
 };
 

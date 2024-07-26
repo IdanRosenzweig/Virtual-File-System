@@ -5,7 +5,7 @@
 
 node_id_t ram_driver::allocte_node() noexcept {
     node_id_t id = nodes_id_gen.generate_id();
-    nodes_pool[id] = node(id);
+    nodes_pool[id] = node_t(id);
     return id;
 }
 
@@ -21,18 +21,11 @@ bool ram_driver::has_node(node_id_t id) noexcept {
     return nodes_pool.count(id);
 }
 
-std::unique_ptr<node> ram_driver::read_node(node_id_t id) noexcept {
-    // no need to actually read from the disk and allocate the node,
-    // because the DATA is allocated on the ram...
-    const auto& iter =  nodes_pool[id];
-    node read(id);
-    read.name = iter.name;
-    read.comp_id = iter.comp_id;
-    read.refs_id = iter.refs_id;
-    return std::make_unique<node>(std::move(read));
+void ram_driver::read_node(node_id_t id, node_t *dest) noexcept {
+    *dest = nodes_pool[id];
 }
 
-void ram_driver::write_node(const node *node) noexcept {
+void ram_driver::write_node(const node_t *node) noexcept {
     auto iter = nodes_pool.find(node->id);
     if (iter == nodes_pool.end()) return; // the node doesn't exist
 
@@ -42,7 +35,7 @@ void ram_driver::write_node(const node *node) noexcept {
 
 comp_id_t ram_driver::allocate_comp() noexcept {
     comp_id_t id = comps_id_gen.generate_id();
-    comps_pool[id] = comp(null_comp(id));
+    comps_pool[id] = comp_t(null_comp(id));
     return id;
 }
 
@@ -59,18 +52,15 @@ bool ram_driver::has_comp(comp_id_t id) noexcept {
 }
 
 comp_type ram_driver::read_comp_type(comp_id_t id) noexcept {
-    return comp::get_type(comps_pool[id]);
+    return comp_t::get_type(comps_pool[id]);
 }
 
-std::unique_ptr<comp> ram_driver::read_comp(comp_id_t id) noexcept {
-    // no need to actually read from the disk and allocate the comp,
-    // because the DATA is allocated on the ram...
-    const auto& iter = comps_pool[id];
-    return std::make_unique<comp>(iter);
+void ram_driver::read_comp(comp_id_t id, comp_t *dest) noexcept {
+    *dest = comps_pool[id];
 }
 
-void ram_driver::write_comp(const comp *comp) noexcept {
-    auto iter = comps_pool.find(comp::get_id(*comp));
+void ram_driver::write_comp(const comp_t *comp) noexcept {
+    auto iter = comps_pool.find(comp_t::get_id(*comp));
     if (iter == comps_pool.end()) return; // the comp doesn't exist
 
     iter->second = *comp;
@@ -79,7 +69,7 @@ void ram_driver::write_comp(const comp *comp) noexcept {
 
 refs_id_t ram_driver::allocte_refs() noexcept {
     refs_id_t id = refs_id_gen.generate_id();
-    refs_pool[id] = refs(id);
+    refs_pool[id] = refs_t(id);
     return id;
 }
 
@@ -95,14 +85,11 @@ bool ram_driver::has_refs(refs_id_t id) noexcept {
     return refs_pool.count(id);
 }
 
-std::unique_ptr<refs>  ram_driver::read_refs(refs_id_t id) noexcept {
-    // no need to actually read from the disk and allocate the refs,
-    // because the DATA is allocated on the ram...
-    const auto& iter = refs_pool[id];
-    return std::make_unique<refs>(iter);
+void ram_driver::read_refs(refs_id_t id, refs_t *dest) noexcept {
+    *dest = refs_pool[id];
 }
 
-void ram_driver::write_refs(const refs *refs) noexcept {
+void ram_driver::write_refs(const refs_t *refs) noexcept {
     auto iter = refs_pool.find(refs->id);
     if (iter == refs_pool.end()) return; // the data doesn't exist
 
@@ -112,7 +99,7 @@ void ram_driver::write_refs(const refs *refs) noexcept {
 
 content_id_t ram_driver::allocate_content() noexcept {
     content_id_t id = content_id_gen.generate_id();
-    content_pool[id] = content(null_content(id));
+    content_pool[id] = content_t(null_content(id));
     return id;
 }
 
@@ -129,18 +116,15 @@ bool ram_driver::has_content(content_id_t id) noexcept {
 }
 
 content_type ram_driver::read_content_type(content_id_t id) noexcept {
-    return content::get_type(content_pool[id]);
+    return content_t::get_type(content_pool[id]);
 }
 
-std::unique_ptr<content> ram_driver::read_content(content_id_t id) noexcept {
-    // no need to actually read from the disk and allocate the data,
-    // because the fs is allocated on the ram...
-    const auto& iter = content_pool[id];
-    return std::make_unique<content>(iter);
+void ram_driver::read_content(content_id_t id, content_t *dest) noexcept {
+    *dest = content_pool[id];
 }
 
-void ram_driver::write_content(const content *data) noexcept {
-    auto iter = content_pool.find(content::get_id(*data));
+void ram_driver::write_content(const content_t *data) noexcept {
+    auto iter = content_pool.find(content_t::get_id(*data));
     if (iter == content_pool.end()) return; // the data doesn't exist
 
     iter->second = *data;

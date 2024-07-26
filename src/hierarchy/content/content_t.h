@@ -19,8 +19,8 @@ enum class content_type {
 // all possible types of content data
 using content_data = std::variant<null_content, textfile>; // polymorphic data
 
-struct content : public content_data {
-    static constexpr inline content_type get_type(const content &val) {
+struct content_t : public content_data {
+    static constexpr inline content_type get_type(const content_t &val) {
         switch (val.index()) {
             default:
             case variant_index<null_content, content_data>: return content_type::null;
@@ -28,38 +28,38 @@ struct content : public content_data {
         }
     }
 
-    static constexpr inline content_id_t get_id(const content &val) {
+    static constexpr inline content_id_t get_id(const content_t &val) {
         return std::visit([&](auto &obj) { return obj.id; }, val);
     }
 
     template<typename T>
-    static constexpr inline T *get_ptr(content *val) {
+    static constexpr inline T *get_ptr(content_t *val) {
         return (T *) std::get_if<T>(val);
     }
 
-    content() : content_data(null_content()) {
+    content_t() : content_data(null_content()) {
     }
 
-    explicit content(const content_data &val)
+    explicit content_t(const content_data &val)
         : content_data(val) {
     }
 
-    content(const content &other)
+    content_t(const content_t &other)
         : content_data(other) {
     }
 
-    content(content &&other) noexcept
+    content_t(content_t &&other) noexcept
         : content_data(std::move(other)) {
     }
 
-    content &operator=(const content &other) {
+    content_t &operator=(const content_t &other) {
         if (this == &other)
             return *this;
         content_data::operator =(other);
         return *this;
     }
 
-    content &operator=(content &&other) noexcept {
+    content_t &operator=(content_t &&other) noexcept {
         if (this == &other)
             return *this;
         content_data::operator =(std::move(other));
