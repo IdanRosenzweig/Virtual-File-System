@@ -26,10 +26,9 @@ std::unique_ptr<node> ram_driver::read_node(node_id_t id) noexcept {
     // because the DATA is allocated on the ram...
     const auto& iter =  nodes_pool[id];
     node read(id);
-    if (true) read.name = iter.name;
-    if (true) read.comp_id = iter.comp_id;
-    if (true) read.refs_id = iter.refs_id;
-    if (true) read.content_id = iter.content_id;
+    read.name = iter.name;
+    read.comp_id = iter.comp_id;
+    read.refs_id = iter.refs_id;
     return std::make_unique<node>(std::move(read));
 }
 

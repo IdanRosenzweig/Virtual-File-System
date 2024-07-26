@@ -7,7 +7,7 @@
 #include "src/hierarchy/content/content_id.h"
 
 struct content_pt : public base_comp {
-    content_id_t id = content_id_null;
+    content_id_t ptr = content_id_null;
 
     content_pt() = default;
 
@@ -17,19 +17,19 @@ struct content_pt : public base_comp {
 
     content_pt(const content_pt &other)
         : base_comp(other),
-          id(other.id) {
+          ptr(other.ptr) {
     }
 
     content_pt(content_pt &&other) noexcept
         : base_comp(std::move(other)),
-          id(std::move(other.id)) {
+          ptr(std::move(other.ptr)) {
     }
 
     content_pt & operator=(const content_pt &other) {
         if (this == &other)
             return *this;
         base_comp::operator =(other);
-        id = other.id;
+        ptr = other.ptr;
         return *this;
     }
 
@@ -37,7 +37,7 @@ struct content_pt : public base_comp {
         if (this == &other)
             return *this;
         base_comp::operator =(std::move(other));
-        id = std::move(other.id);
+        ptr = std::move(other.ptr);
         return *this;
     }
 };

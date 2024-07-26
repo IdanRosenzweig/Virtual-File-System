@@ -10,15 +10,17 @@
 #include "dir/dir.h"
 #include "softlink/softlink.h"
 #include "mount/mount.h"
+#include "content/content_pt.h"
 
 enum class comp_type {
-    null, dir, softlink, mount
+    null, dir, softlink, mount, content_pt
 };
 
 // all possible types of components
-using comp_data = std::variant<null_comp, dir, softlink, mount>; // polymorphic data
+using comp_data = std::variant<null_comp, dir, softlink, mount, content_pt>; // polymorphic data
 
 struct comp : public comp_data {
+    int hardlinks_cnt = 0;
     static constexpr inline comp_type get_type(const comp &val) {
         switch (val.index()) {
             default:
@@ -26,6 +28,7 @@ struct comp : public comp_data {
             case variant_index<dir, comp_data>: return comp_type::dir;
             case variant_index<softlink, comp_data>: return comp_type::softlink;
             case variant_index<mount, comp_data>: return comp_type::mount;
+            case variant_index<content_pt, comp_data>: return comp_type::content_pt;
         }
     }
 

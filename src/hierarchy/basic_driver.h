@@ -29,7 +29,6 @@ struct basic_driver {
 
     // read from the filesystem the current data of the node with the specific id.
     // return its data (allocated locally), or nullptr if node doesn't exist
-    // todo possible to add optional parameters (bool node_name, bool content, bool node_refs) to indicate whether to read thos or not
     virtual std::unique_ptr<node> read_node(node_id_t id) noexcept = 0;
 
     // update in the filesystem the corresponding data of the node with the specified id (if id exists)

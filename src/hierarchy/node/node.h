@@ -17,9 +17,7 @@ struct node {
     path_comp name = path_comp_null; // non unique name for the node
 
     comp_id_t comp_id = comp_id_null; // pointer to a unique component struct representing this node
-
     refs_id_t refs_id = refs_id_null; // pointer to unique references struct
-    content_id_t content_id = content_id_null; // pointer to non unique content related to this node
 
     node() = default;
 
@@ -30,48 +28,42 @@ struct node {
         : id(other.id),
           name(other.name),
           comp_id(other.comp_id),
-          refs_id(other.refs_id),
-          content_id(other.content_id) {
+          refs_id(other.refs_id) {
     }
 
     node(node &&other) noexcept
         : id(other.id),
           name(std::move(other.name)),
           comp_id(other.comp_id),
-          refs_id(other.refs_id),
-          content_id(other.content_id) {
+          refs_id(other.refs_id) {
         other.id = node_id_null;
         other.name = path_comp_null;
         other.comp_id = comp_id_null;
         other.refs_id = refs_id_null;
-        other.content_id = content_id_null;
     }
 
-    node & operator=(const node &other) {
+    node &operator=(const node &other) {
         if (this == &other)
             return *this;
         id = other.id;
         name = other.name;
         comp_id = other.comp_id;
         refs_id = other.refs_id;
-        content_id = other.content_id;
         return *this;
     }
 
-    node & operator=(node &&other) noexcept {
+    node &operator=(node &&other) noexcept {
         if (this == &other)
             return *this;
         id = other.id;
         name = std::move(other.name);
         comp_id = other.comp_id;
         refs_id = other.refs_id;
-        content_id = other.content_id;
         other.id = node_id_null;
         other.name = path_comp_null;
         other.comp_id = comp_id_null;
         other.refs_id = refs_id_null;
-        other.content_id = content_id_null;
-         return *this;
+        return *this;
     }
 
     // equality and relational operators to compare nodes

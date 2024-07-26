@@ -13,6 +13,10 @@ struct textfile : public base_content {
 
     textfile() : base_content() {}
 
+    explicit textfile(const content_id_t &id)
+        : base_content(id) {
+    }
+
     textfile(const textfile &other)
         : base_content(other) {
         memcpy(text, other.text, TEXTFILE_MAX_SZ);

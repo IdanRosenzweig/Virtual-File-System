@@ -19,7 +19,7 @@ void dir::add_child_to_dir(const ctx_t<std::unique_ptr<comp>>& dir_comp, ctx_t<n
     dir_comp.hier->driver->write_comp(dir_comp.val.get());
 
     if (add_to_refs) { // add a reference to the child node
-        auto refs = hierarchy::read_refs(hierarchy::stat_refs_id(child));
+        auto refs = hierarchy::stat_refs(hierarchy::stat_refs_id(child));
         refs.val->dirs.insert({dir_comp.hier, dir_ptr->id});
         refs.hier->driver->write_refs(refs.val.get()); // write back to driver
     }
@@ -42,7 +42,7 @@ void dir::remove_child_from_dir(const ctx_t<std::unique_ptr<comp>>& dir_comp, ct
 
 
     if (remove_from_refs) { // remove the reference from child
-        auto refs = hierarchy::read_refs(hierarchy::stat_refs_id(child));
+        auto refs = hierarchy::stat_refs(hierarchy::stat_refs_id(child));
         refs.val->dirs.erase({dir_comp.hier, dir_ptr->id});
         refs.hier->driver->write_refs(refs.val.get()); // write back to driver
     }
