@@ -63,6 +63,7 @@ add_executable(vfs
         # lib
         lib/id_manager.h
         lib/lib_common.h
+        lib/union_variant.h
 
         # app
         app/test.cpp

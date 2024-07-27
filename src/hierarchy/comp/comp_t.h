@@ -1,7 +1,7 @@
 #ifndef COMP_H
 #define COMP_H
 
-#include <variant>
+#include "lib/union_variant.h"
 #include "lib/lib_common.h"
 
 #include "comp_id.h"
@@ -17,28 +17,57 @@ enum class comp_type {
 };
 
 // all possible types of components
-using comp_data = std::variant<null_comp, dir, softlink, mount, content_pt>; // polymorphic data
+using comp_data = union_variant<null_comp, dir, softlink, mount, content_pt>; // polymorphic data
 
 struct comp_t : public comp_data {
     int hardlinks_cnt = 0;
-    static constexpr inline comp_type get_type(const comp_t &val) {
-        switch (val.index()) {
+
+    static inline comp_type get_type(const comp_t &val) {
+        switch (val.curr_index()) {
             default:
-            case variant_index<null_comp, comp_data>: return comp_type::null;
-            case variant_index<dir, comp_data>: return comp_type::dir;
-            case variant_index<softlink, comp_data>: return comp_type::softlink;
-            case variant_index<mount, comp_data>: return comp_type::mount;
-            case variant_index<content_pt, comp_data>: return comp_type::content_pt;
+            case comp_data::type_index<null_comp>(): return comp_type::null;
+            case comp_data::type_index<dir>(): return comp_type::dir;
+            case comp_data::type_index<softlink>(): return comp_type::softlink;
+            case comp_data::type_index<mount>(): return comp_type::mount;
+            case comp_data::type_index<content_pt>(): return comp_type::content_pt;
         }
     }
 
-    static constexpr inline comp_id_t get_id(const comp_t &val) {
-        return std::visit([&](auto &obj) { return obj.id; }, val);
+    struct get_id_visitor {
+        template<typename T>
+        auto operator()(T *ptr) {
+            return ptr->id;
+        }
+
+        void operator()(void) {
+        }
+    };
+
+    static inline comp_id_t get_id(const comp_t &val) {
+        return ((comp_data &) val).visit(get_id_visitor());
+        // return std::visit([&](auto &obj) { return obj.id; }, val);
+    }
+
+    struct set_id_visitor {
+        comp_id_t id;
+
+        template<typename T>
+        auto operator()(T *ptr) {
+            ptr->id = id;
+        }
+
+        void operator()(void) {
+        }
+    };
+
+    static inline void set_id(const comp_t &val, comp_id_t id) {
+        ((comp_data &) val).visit(set_id_visitor(id));
     }
 
     template<typename T>
-    static constexpr inline T *get_ptr(comp_t *val) {
-        return (T *) std::get_if<T>(val);
+    static inline T *get_ptr(comp_t *val) {
+        return val->get_by_type<T>();
+        // return (T *) std::get_if<T>(val);
     }
 
     comp_t() : comp_data(null_comp()) {

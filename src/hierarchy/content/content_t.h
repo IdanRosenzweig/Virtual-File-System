@@ -1,8 +1,8 @@
 #ifndef CONTENT_H
 #define CONTENT_H
 
-#include <variant>
 #include "lib/lib_common.h"
+#include "lib/union_variant.h"
 
 #include "content_id.h"
 
@@ -17,24 +17,36 @@ enum class content_type {
 };
 
 // all possible types of content data
-using content_data = std::variant<null_content, textfile>; // polymorphic data
+using content_data = union_variant<null_content, textfile>; // polymorphic data
 
 struct content_t : public content_data {
-    static constexpr inline content_type get_type(const content_t &val) {
-        switch (val.index()) {
+    static inline content_type get_type(const content_t &val) {
+        switch (val.curr_index()) {
             default:
-            case variant_index<null_content, content_data>: return content_type::null;
-            case variant_index<textfile, content_data>: return content_type::textfile;
+            case content_data::type_index<null_content>(): return content_type::null;
+            case content_data::type_index<textfile>(): return content_type::textfile;
         }
     }
 
-    static constexpr inline content_id_t get_id(const content_t &val) {
-        return std::visit([&](auto &obj) { return obj.id; }, val);
+    struct get_id_visitor {
+        template<typename T>
+        auto operator()(T *ptr) {
+            return ptr->id;
+        }
+
+        void operator()(void) {
+        }
+    };
+
+    static inline content_id_t get_id(const content_t &val) {
+        return ((content_data &) val).visit(get_id_visitor());
+        // return std::visit([&](auto &obj) { return obj.id; }, val);
     }
 
     template<typename T>
-    static constexpr inline T *get_ptr(content_t *val) {
-        return (T *) std::get_if<T>(val);
+    static inline T *get_ptr(content_t *val) {
+        return val->get_by_type<T>();
+        // return (T *) std::get_if<T>(val);
     }
 
     content_t() : content_data(null_content()) {

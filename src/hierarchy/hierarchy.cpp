@@ -29,7 +29,8 @@ ctx_t<node_id_t> hierarchy::mk_direct_node(ctx_t<node_id_t> ctx, const path_comp
                 comp_id_t comp_id = ctx.hier->driver->allocate_comp();
                 comp_t _comp(comp_val);
                 _comp.hardlinks_cnt = 1;
-                std::visit([&](auto &obj) { obj.id = comp_id; }, _comp);
+                comp_t::set_id(_comp, comp_id);
+                // std::visit([&](auto &obj) { obj.id = comp_id; }, _comp);
 
                 // allocte empty refs
                 refs_id_t refs_id = ctx.hier->driver->allocte_refs();

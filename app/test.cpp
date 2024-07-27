@@ -34,7 +34,8 @@ int main() {
 
 
     ctx_t<textfile> open_file2;
-    hierarchy::open_textfile(hierarchy::mk_hardlink(fs->get_root_ctx(), parse_path("/bin/runme"), parse_path("/bin/exec")), &open_file2);
+    hierarchy::open_textfile(
+        hierarchy::mk_hardlink(fs->get_root_ctx(), parse_path("/bin/runme"), parse_path("/bin/exec")), &open_file2);
     strcpy((char *) open_file2.val.text, "this is exec file");
     std::cout << "second time: " << open_file2.val.text << std::endl;
     hierarchy::close_textfile(fs, &open_file2.val);
@@ -42,7 +43,8 @@ int main() {
 
     /* /home/user dir */
     ctx_t<node_id_t> home_id = hierarchy::mk_dir(fs->get_root_ctx(), parse_path("/home/user"));
-    hierarchy::mk_softlink(home_id, parse_path("bin"), softlink({&main_fs, parse_path("/bin")})); // from the user home dir
+    hierarchy::mk_softlink(home_id, parse_path("bin"), softlink({&main_fs, parse_path("/bin")}));
+    // from the user home dir
     //
     // ctx_t<textfile> open_tmpfile;
     // hierarchy::open_textfile(hierarchy::mk_textfile(home_id, parse_path("tmpfile")), &open_tmpfile);
@@ -52,7 +54,8 @@ int main() {
 
     // hierarchy::rm_node(hierarchy::search_node(fs->get_root_ctx(), parse_path("/home/user/bin/runme")), true);
     ctx_t<textfile> open_file3;
-    hierarchy::open_textfile(hierarchy::search_node(fs->get_root_ctx(), parse_path("/home/user/bin/exec")), &open_file3);
+    hierarchy::open_textfile(hierarchy::search_node(fs->get_root_ctx(), parse_path("/home/user/bin/exec")),
+                             &open_file3);
     std::cout << "third time: " << open_file3.val.text << std::endl;
     strcpy((char *) open_file3.val.text, "this is a file");
     std::cout << "fourth time: " << open_file3.val.text << std::endl;

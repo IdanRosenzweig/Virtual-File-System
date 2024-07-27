@@ -35,7 +35,7 @@ public:
         comp_id_t comp_id = driver->allocate_comp();
         struct dir dir{};
         dir.id = comp_id;
-        comp_t root_dir{dir};
+        comp_t root_dir(std::move(dir));
 
         // allocte empty refs
         refs_id_t refs_id = driver->allocte_refs();

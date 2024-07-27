@@ -6,8 +6,8 @@
 #include "../base_comp.h"
 
 struct null_comp : public base_comp {
-
-    null_comp() : base_comp() {}
+    null_comp() : base_comp() {
+    }
 
     explicit null_comp(comp_id_t id)
         : base_comp(id) {

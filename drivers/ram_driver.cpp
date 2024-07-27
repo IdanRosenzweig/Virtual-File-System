@@ -35,7 +35,7 @@ void ram_driver::write_node(const node_t *node) noexcept {
 
 comp_id_t ram_driver::allocate_comp() noexcept {
     comp_id_t id = comps_id_gen.generate_id();
-    comps_pool[id] = comp_t(null_comp(id));
+    comps_pool[id] = comp_t(comp_data(null_comp(id)));
     return id;
 }
 
