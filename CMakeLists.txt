@@ -83,5 +83,6 @@ add_executable(vfs
         stream_devs/random_stream_dev.h
 
         src/hierarchy/comp/content/content_pt.h
+        lib/avl_tree.h
 
 )

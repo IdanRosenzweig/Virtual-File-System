@@ -144,7 +144,7 @@ public:
     }
 };
 
-#define STRONG_TYPE_DEFINE 1
+#define STRONG_TYPE_DEFINE 0
 
 #if STRONG_TYPE_DEFINE == 1
 #define type_define(name, type) \

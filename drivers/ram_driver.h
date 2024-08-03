@@ -1,8 +1,8 @@
 #ifndef RAM_DRIVER_H
 #define RAM_DRIVER_H
 
-#include <map>
 #include "lib/id_manager.h"
+#include "lib/avl_tree.h"
 
 #include "src/hierarchy/basic_driver.h"
 
@@ -14,10 +14,10 @@ private:
     id_manager<content_id_t> content_id_gen;
 
     // the implemenntation for allocating and freeing nodes would just be allocating nodes locally on the ram and searching them using search tree
-    std::map<node_id_t, node_t> nodes_pool;
-    std::map<comp_id_t, comp_t> comps_pool;
-    std::map<refs_id_t, refs_t> refs_pool;
-    std::map<content_id_t, content_t> content_pool;
+    avl_node<node_id_t, node_t>* nodes_pool = nullptr;
+    avl_node<comp_id_t, comp_t>* comps_pool = nullptr;
+    avl_node<refs_id_t, refs_t>* refs_pool = nullptr;
+    avl_node<content_id_t, content_t>* content_pool = nullptr;
 
 public:
     explicit ram_driver()

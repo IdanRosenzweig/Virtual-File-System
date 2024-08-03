@@ -51,13 +51,13 @@ struct union_variant {
     union_variant() = default;
 
     template<typename TYPE>
-        requires ( std::same_as<TYPE, ALTERNATIVES> || ... )
+        requires ( is_same<TYPE, ALTERNATIVES>::val || ... )
     union_variant(const TYPE &val) : empty(false), curr_in(index_of_type<TYPE, ALTERNATIVES...>::index) {
         new(reinterpret_cast<TYPE *>(storage.data)) TYPE(val);
     }
 
     template<typename TYPE>
-        requires ( std::same_as<TYPE, ALTERNATIVES> || ... )
+        requires ( is_same<TYPE, ALTERNATIVES>::val || ... )
     union_variant(TYPE &&val) : empty(false), curr_in(index_of_type<TYPE, ALTERNATIVES...>::index) {
         new(reinterpret_cast<TYPE *>(storage.data)) TYPE(std::forward<TYPE>(val));
     }
@@ -135,14 +135,14 @@ public:
     }
 
     template<typename TYPE>
-        requires ( std::same_as<TYPE, ALTERNATIVES> || ... )
+        requires ( is_same<TYPE, ALTERNATIVES>::val || ... )
     auto *get_by_type() {
         if (empty || curr_in != index_of_type<TYPE, ALTERNATIVES...>::index) throw;
         return reinterpret_cast<TYPE *>(storage.data);
     }
 
     template<typename TYPE, typename... ARGS>
-        requires ( std::same_as<TYPE, ALTERNATIVES> || ... )
+        requires ( is_same<TYPE, ALTERNATIVES>::val || ... )
     void set(ARGS &&... args) {
         empty = false;
         curr_in = index_of_type<TYPE, ALTERNATIVES...>::index;
@@ -150,7 +150,7 @@ public:
     }
 
     template<typename TYPE>
-        requires ( std::same_as<TYPE, ALTERNATIVES> || ... )
+        requires ( is_same<TYPE, ALTERNATIVES>::val || ... )
     static constexpr int type_index() noexcept {
         return index_of_type<TYPE, ALTERNATIVES...>::index;
     }

@@ -58,17 +58,17 @@ template<int INDEX, typename... TYPES>
 using type_at_index_v = typename type_at_index<INDEX, TYPES...>::type;
 
 // type traits
-// template<class T, class U>
-// struct is_same;
-//
-// template<class T, class U>
-// struct is_same{
-//     constexpr static auto val = false;
-// };
-//
-// template<class T>
-// struct is_same<T, T> {
-//     constexpr static auto val = true;
-// };
+template<class T, class U>
+struct is_same;
+
+template<class T, class U>
+struct is_same{
+    constexpr static auto val = false;
+};
+
+template<class T>
+struct is_same<T, T> {
+    constexpr static auto val = true;
+};
 
 #endif //LIB_COMMON_H
