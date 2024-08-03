@@ -1,9 +1,8 @@
 #include "proc_ctl_dev.h"
 
-#include <cstring>
-#include <iostream>
 #include <fcntl.h>
 #include <unistd.h>
+#include <linux/limits.h>
 
 ctl_dev::out_data_t proc_ctl_dev::access(const code_t &ctl_code, const in_data_t &data) {
     errno = 0;
@@ -12,14 +11,16 @@ ctl_dev::out_data_t proc_ctl_dev::access(const code_t &ctl_code, const in_data_t
 
     switch (ctl_code) {
         case codes::GET_ARGS: {
-            char path[20];
+            char path[PATH_MAX];
             snprintf(path, 20, "/proc/%d/cmdline", pid);
 
             int fd = open(path, O_RDONLY);
             if (fd == -1) throw;
 
-            char args[200];
-            memset(args, 0, 200);
+#define ARGS_MAX 1000
+            char args[ARGS_MAX];
+            for (int i = 0; i < ARGS_MAX; i++) args[i] = 0;
+
             int res = read(fd, args, 200);
             if (res <= 0) throw;
             for (int i = 0; i < res; i++)

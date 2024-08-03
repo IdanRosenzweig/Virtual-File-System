@@ -1,6 +1,5 @@
 #include "ram_driver.h"
 
-#include <iostream>
 #include <memory>
 
 node_id_t ram_driver::allocte_node() noexcept {

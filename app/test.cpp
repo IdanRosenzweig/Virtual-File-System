@@ -1,6 +1,5 @@
 #include <chrono>
 #include <iostream>
-#include <string.h>
 
 #include <sys/stat.h>
 

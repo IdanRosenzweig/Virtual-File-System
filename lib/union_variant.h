@@ -4,7 +4,6 @@
 #include "lib_common.h"
 
 /** aligned union-like storage for pack of types */
-
 template<size_t MIN_SZ, typename... TYPES>
 struct aligned_storaege {
     // static constexpr size_t alignment = std::max({alignof(TYPES)...});
@@ -12,7 +11,6 @@ struct aligned_storaege {
     // alignas(alignment) uint8_t data[std::max({MIN_SZ, sizeof(TYPES)...})];
     alignas(alignment) uint8_t data[operation<max_op, MIN_SZ, sizeof(TYPES)...>::val];
 };
-
 
 /** fundamental visitor instantiations */
 struct delete_visitor {
@@ -42,7 +40,6 @@ struct move_visitor {
     void operator()(void) {
     }
 };
-
 
 /** variant struct */
 template<typename... ALTERNATIVES>
