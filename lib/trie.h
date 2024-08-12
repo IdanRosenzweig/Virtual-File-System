@@ -2,8 +2,7 @@
 #define TRIE_H
 
 #include <vector>
-#include <queue>
-#include <algorithm>
+#include "queue.h"
 
 #define PARENT_PTR 1
 #define VAL_AT_NODE 1
@@ -252,19 +251,19 @@ public:
 #if VAL_AT_NODE == 1
     // if reversed is false, write the string of the downwards path ancestor->...->child into the dest ptr
     // if reversed is true, write the string of the upwards path child->...->ancestor into the dest ptr
-    static std::vector<TYPE> get_path_string(trie_node *ancestor, trie_node *child, bool reversed = false) {
-        if (child == nullptr || ancestor == nullptr) return {};
-
-        std::vector<TYPE> str;
-
-        while (child != ancestor) {
-            str.push_back(child->val);
-            child = child->parent;
-        }
-
-        if (!reversed) std::reverse(str.begin(), str.end());
-        return str;
-    }
+    // static std::vector<TYPE> get_path_string(trie_node *ancestor, trie_node *child, bool reversed = false) {
+    //     if (child == nullptr || ancestor == nullptr) return {};
+    //
+    //     std::vector<TYPE> str;
+    //
+    //     while (child != ancestor) {
+    //         str.push_back(child->val);
+    //         child = child->parent;
+    //     }
+    //
+    //     if (!reversed) std::reverse(str.begin(), str.end());
+    //     return str;
+    // }
 #endif
 #endif
 
@@ -314,15 +313,15 @@ public:
 
             return nullptr;
         } else {
-            std::queue<trie_node *> prefs;
+            queue<trie_node *> prefs;
             int i = 0;
             while (i++ < len) {
                 node = search_string(node, str++);
                 if (node == nullptr) break;
 
                 if (node->marked) {
-                    if (prefs.size() == k) prefs.pop();
-                    prefs.push(node);
+                    if (prefs.size() == k) prefs.pop_front();
+                    prefs.push_back(node);
                 }
             }
 

@@ -1,7 +1,7 @@
 #ifndef REFS_H
 #define REFS_H
 
-#include <set>
+#include "lib/avl_tree.h"
 
 #include "refs_id.h"
 #include "src/hierarchy/node/node_id.h"
@@ -9,7 +9,8 @@
 struct refs_t {
     refs_id_t id = refs_id_null;
 
-    std::set<ctx_t<comp_id_t>> dirs;
+    using avl = avl_node<ctx_t<comp_id_t>, void*>;
+    avl* dirs = nullptr;
 
     refs_t() = default;
 

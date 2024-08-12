@@ -1,12 +1,12 @@
 #include "textfile.h"
 
 
-void read(open_file &file, uint8_t *dest, int cnt) {
+void read(open_file &file, byte *dest, int cnt) {
     for (int i = 0; i < cnt; i++)
         dest[i] = file.file->text[file.ptr_off++];
 }
 
-void write(open_file &file, uint8_t *src, int cnt) {
+void write(open_file &file, byte *src, int cnt) {
     for (int i = 0; i < cnt; i++)
         file.file->text[file.ptr_off++] = src[i];
 }

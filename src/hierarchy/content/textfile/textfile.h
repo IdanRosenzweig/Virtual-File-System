@@ -1,15 +1,15 @@
 #ifndef TEXTFILE_H
 #define TEXTFILE_H
 
-#include <cstdint>
-#include <string.h>
 #include <utility>
+
+#include "lib/utility.h"
 
 #include "../base_content.h"
 
 struct textfile : public base_content {
 #define TEXTFILE_MAX_SZ 600
-    uint8_t text[TEXTFILE_MAX_SZ] = {0};
+    byte text[TEXTFILE_MAX_SZ] = {0};
 
     textfile() : base_content() {}
 
@@ -51,9 +51,9 @@ struct open_file {
     int ptr_off;
 };
 
-void read(open_file& file, uint8_t* dest, int cnt);
+void read(open_file& file, byte* dest, int cnt);
 
-void write(open_file& file, uint8_t* src, int cnt);
+void write(open_file& file, byte* src, int cnt);
 
 void seek(open_file& file, int off);
 

@@ -171,9 +171,10 @@ void hierarchy::rm_node(ctx_t<node_id_t> ctx, bool recursive) noexcept {
     ctx.hier->driver->read_refs(node.refs_id, &refs);
 
     // update dirs which point to this node
-    for (const ctx_t<comp_id_t> &dir_ref: refs.dirs) {
+    refs_t::avl* it = refs_t::avl::begin(refs.dirs);
+    while (it != nullptr) {
         ctx_t<comp_t> dir_comp;
-        stat_comp(dir_ref, &dir_comp);
+        stat_comp(it->value, &dir_comp);
         dir::remove_child_from_dir(dir_comp, ctx, false);
     }
 

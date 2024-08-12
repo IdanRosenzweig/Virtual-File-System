@@ -76,6 +76,15 @@ public:
     explicit avl_node(const TYPE &value, const DATA &data) : value(value), data(data) {
     }
 
+    static avl_node* begin(avl_node* root) {
+        while (root != nullptr && root->left != nullptr) root = root->left;
+        return root;
+    }
+
+    static avl_node* end(avl_node* root) {
+        return nullptr;
+    }
+
     static avl_node *next(avl_node *node) {
         if (node == nullptr) return nullptr;
 

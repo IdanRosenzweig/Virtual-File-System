@@ -1,7 +1,6 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include <string>
 #include <vector>
 
 #include "lib/lib_common.h"

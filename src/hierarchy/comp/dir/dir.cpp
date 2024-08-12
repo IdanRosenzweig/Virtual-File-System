@@ -6,10 +6,10 @@
 void dir::add_child_to_dir(ctx_t<comp_t> &dir_comp, ctx_t<node_id_t> child, bool add_to_refs) {
     dir *dir_ptr = comp_t::get_ptr<dir>(&dir_comp.val);
 
-    if (dir_ptr->children.count(child)) return;
+    if (avl::count(dir_ptr->children, child)) return;
 
     // insert the child into the set
-    dir_ptr->children.insert(child);
+    avl::insert(dir_ptr->children, child, nullptr);
 
     // insert the child name into the trie
     ctx_t<node_t> child_node;
@@ -23,7 +23,7 @@ void dir::add_child_to_dir(ctx_t<comp_t> &dir_comp, ctx_t<node_id_t> child, bool
         // add a reference to the child node
         ctx_t<refs_t> refs;
         hierarchy::stat_refs(hierarchy::stat_refs_id(child), &refs);
-        refs.val.dirs.insert({dir_comp.hier, dir_ptr->id});
+        refs_t::avl::insert(refs.val.dirs, {dir_comp.hier, dir_ptr->id}, nullptr);
         refs.hier->driver->write_refs(&refs.val); // write back to driver
     }
 }
@@ -31,10 +31,10 @@ void dir::add_child_to_dir(ctx_t<comp_t> &dir_comp, ctx_t<node_id_t> child, bool
 void dir::remove_child_from_dir(ctx_t<comp_t> &dir_comp, ctx_t<node_id_t> child, bool remove_from_refs) {
     dir *dir_ptr = comp_t::get_ptr<dir>(&dir_comp.val);
 
-    if (dir_ptr->children.count(child)) return;
+    if (avl::count(dir_ptr->children, child)) return;
 
     // remove the child from the set
-    dir_ptr->children.erase(child);
+    avl::remove(dir_ptr->children, child);
 
     // remove the child name from the trie
     ctx_t<node_t> child_node;
@@ -49,21 +49,25 @@ void dir::remove_child_from_dir(ctx_t<comp_t> &dir_comp, ctx_t<node_id_t> child,
         // remove the reference from child
         ctx_t<refs_t> refs;
         hierarchy::stat_refs(hierarchy::stat_refs_id(child), &refs);
-        refs.val.dirs.erase({dir_comp.hier, dir_ptr->id});
+        refs_t::avl::remove(refs.val.dirs, {dir_comp.hier, dir_ptr->id});
         refs.hier->driver->write_refs(&refs.val); // write back to driver
     }
 }
 
 bool dir::has_child(comp_t *dir_comp, ctx_t<node_id_t> child) {
     dir *dir_ptr = comp_t::get_ptr<dir>(dir_comp);
-    return dir_ptr->children.count(child);
+    return avl::count(dir_ptr->children, child);
 }
 
 std::vector<ctx_t<node_id_t> > dir::get_all_children(comp_t *dir_comp) {
     dir *dir_ptr = comp_t::get_ptr<dir>(dir_comp);
 
     std::vector<ctx_t<node_id_t> > res;
-    for (const ctx_t<node_id_t> &child: dir_ptr->children) res.push_back(child);
+    avl* it = avl::begin(dir_ptr->children);
+    while (it != nullptr) {
+        res.push_back(it->value);
+        it = avl::next(it);
+    }
     return res;
 }
 

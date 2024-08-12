@@ -3,10 +3,9 @@
 
 #include <cstdint>
 #include <vector>
-#include <set>
-#include <string>
 #include <memory>
 
+#include "lib/avl_tree.h"
 #include "lib/trie.h"
 
 #include "../base_comp.h"
@@ -19,7 +18,8 @@ struct comp_t;
 // a node that points to multiple child nodes
 struct dir : public base_comp {
     // the actual children stored in this dir
-    std::set<ctx_t<node_id_t> > children;
+    using avl = avl_node<ctx_t<node_id_t>, void*>;
+    avl* children;
 
     // a trie to associate strings with children
     static constexpr auto TRIE_ASSIGN = [](const uint8_t *val) -> int { return *val - 'a'; };
@@ -42,6 +42,7 @@ struct dir : public base_comp {
         : base_comp(std::move(other)),
           children(std::move(other.children)),
           trie_root(std::move(other.trie_root)) {
+        other.children = nullptr;
     }
 
     dir &operator=(const dir &other) {
@@ -58,6 +59,7 @@ struct dir : public base_comp {
             return *this;
         base_comp::operator =(std::move(other));
         children = std::move(other.children);
+        other.children = nullptr;
         trie_root = std::move(other.trie_root);
         return *this;
     }

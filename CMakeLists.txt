@@ -84,5 +84,8 @@ add_executable(vfs
 
         src/hierarchy/comp/content/content_pt.h
         lib/avl_tree.h
+        lib/queue.h
+        lib/utility.h
+        lib/utility.cpp
 
 )
