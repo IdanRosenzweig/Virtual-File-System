@@ -1,8 +1,6 @@
 #ifndef NULL_COMP_H
 #define NULL_COMP_H
 
-#include <cstddef>
-
 #include "../base_comp.h"
 
 struct null_comp : public base_comp {

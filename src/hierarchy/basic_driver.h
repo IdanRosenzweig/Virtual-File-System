@@ -1,8 +1,6 @@
 #ifndef BASIC_DRIVER_H
 #define BASIC_DRIVER_H
 
-#include <memory>
-
 #include "node/node.h"
 #include "comp/comp_t.h"
 #include "refs/refs_t.h"

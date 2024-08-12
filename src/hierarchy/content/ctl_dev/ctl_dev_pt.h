@@ -19,7 +19,7 @@ struct ctl_dev_pt : public base_content {
     }
 
     ctl_dev_pt(ctl_dev_pt &&other) noexcept
-        : base_content(std::move(other)),
+        : base_content(move(other)),
           dev_ptr(other.dev_ptr) {
     }
 
@@ -34,7 +34,7 @@ struct ctl_dev_pt : public base_content {
     ctl_dev_pt & operator=(ctl_dev_pt &&other) noexcept {
         if (this == &other)
             return *this;
-        base_content::operator =(std::move(other));
+        base_content::operator =(move(other));
         dev_ptr = other.dev_ptr;
         return *this;
     }

@@ -1,6 +1,8 @@
 #ifndef CTX_T_H
 #define CTX_T_H
 
+#include "lib/utility.h"
+
 struct hierarchy;
 
 template<typename T>
@@ -18,7 +20,7 @@ struct ctx_t {
 
     ctx_t(hierarchy *hierarchy, T &&val) noexcept
         : hier(hierarchy),
-          val(std::move(val)) {
+          val(::move(val)) {
     }
 
     ctx_t(const ctx_t &other)
@@ -28,7 +30,7 @@ struct ctx_t {
 
     ctx_t(ctx_t &&other) noexcept
         : hier(other.hier),
-          val(std::move(other.val)) {
+          val(::move(other.val)) {
     }
 
     ctx_t &operator=(const ctx_t &other) {
@@ -43,7 +45,7 @@ struct ctx_t {
         if (this == &other)
             return *this;
         hier = other.hier;
-        val = std::move(other.val);
+        val = ::move(other.val);
         return *this;
     }
 
@@ -82,7 +84,7 @@ template<typename T>
 ctx_t<T> null_ctx(const T &val) { return ctx_t<T>(nullptr, val); }
 
 template<typename T>
-ctx_t<T> null_ctx(T &&val) { return ctx_t<T>(nullptr, std::move(val)); }
+ctx_t<T> null_ctx(T &&val) { return ctx_t<T>(nullptr, move(val)); }
 
 // wrapper for checking null ctx
 template<typename T>

@@ -1,9 +1,7 @@
 #ifndef DIR_H
 #define DIR_H
 
-#include <cstdint>
 #include <vector>
-#include <memory>
 
 #include "lib/avl_tree.h"
 #include "lib/trie.h"
@@ -22,8 +20,8 @@ struct dir : public base_comp {
     avl* children;
 
     // a trie to associate strings with children
-    static constexpr auto TRIE_ASSIGN = [](const uint8_t *val) -> int { return *val - 'a'; };
-    typedef trie_node<uint8_t, ctx_t<node_id_t>, 'z' - 'a' + 1, TRIE_ASSIGN> trie;
+    static constexpr auto TRIE_ASSIGN = [](const byte *val) -> int { return *val - 'a'; };
+    typedef trie_node<byte, ctx_t<node_id_t>, 'z' - 'a' + 1, TRIE_ASSIGN> trie;
     trie trie_root;
 
     dir() = default;
@@ -39,9 +37,9 @@ struct dir : public base_comp {
     }
 
     dir(dir &&other) noexcept
-        : base_comp(std::move(other)),
-          children(std::move(other.children)),
-          trie_root(std::move(other.trie_root)) {
+        : base_comp(move(other)),
+          children(move(other.children)),
+          trie_root(move(other.trie_root)) {
         other.children = nullptr;
     }
 
@@ -57,10 +55,10 @@ struct dir : public base_comp {
     dir &operator=(dir &&other) noexcept {
         if (this == &other)
             return *this;
-        base_comp::operator =(std::move(other));
-        children = std::move(other.children);
+        base_comp::operator =(move(other));
+        children = move(other.children);
         other.children = nullptr;
-        trie_root = std::move(other.trie_root);
+        trie_root = move(other.trie_root);
         return *this;
     }
 

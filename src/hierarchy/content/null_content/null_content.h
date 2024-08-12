@@ -1,7 +1,6 @@
 #ifndef NULL_CONTENT_H
 #define NULL_CONTENT_H
 
-#include <utility>
 
 #include "../base_content.h"
 
@@ -18,7 +17,7 @@ struct null_content : public base_content {
     }
 
     null_content(null_content &&other) noexcept
-        : base_content(std::move(other)) {
+        : base_content(move(other)) {
     }
 
     null_content & operator=(const null_content &other) {
@@ -31,7 +30,7 @@ struct null_content : public base_content {
     null_content & operator=(null_content &&other) noexcept {
         if (this == &other)
             return *this;
-        base_content::operator =(std::move(other));
+        base_content::operator =(move(other));
         return *this;
     }
 };

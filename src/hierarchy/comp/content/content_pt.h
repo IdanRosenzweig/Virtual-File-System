@@ -1,8 +1,6 @@
 #ifndef CONTENT_PT_H
 #define CONTENT_PT_H
 
-#include <utility>
-
 #include "../base_comp.h"
 #include "src/hierarchy/content/content_id.h"
 
@@ -21,8 +19,8 @@ struct content_pt : public base_comp {
     }
 
     content_pt(content_pt &&other) noexcept
-        : base_comp(std::move(other)),
-          ptr(std::move(other.ptr)) {
+        : base_comp(move(other)),
+          ptr(move(other.ptr)) {
     }
 
     content_pt &operator=(const content_pt &other) {
@@ -36,8 +34,8 @@ struct content_pt : public base_comp {
     content_pt &operator=(content_pt &&other) noexcept {
         if (this == &other)
             return *this;
-        base_comp::operator =(std::move(other));
-        ptr = std::move(other.ptr);
+        base_comp::operator =(move(other));
+        ptr = move(other.ptr);
         return *this;
     }
 };

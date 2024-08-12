@@ -1,8 +1,6 @@
 #ifndef MOUNT_H
 #define MOUNT_H
 
-#include <utility>
-
 #include "../base_comp.h"
 
 struct hierarchy;
@@ -23,7 +21,7 @@ struct mount : public base_comp {
     }
 
     mount(mount &&other) noexcept
-        : base_comp(std::move(other)),
+        : base_comp(move(other)),
           target_hier(other.target_hier) {
     }
 
@@ -38,7 +36,7 @@ struct mount : public base_comp {
     mount & operator=(mount &&other) noexcept {
         if (this == &other)
             return *this;
-        base_comp::operator =(std::move(other));
+        base_comp::operator =(move(other));
         target_hier = other.target_hier;
         return *this;
     }

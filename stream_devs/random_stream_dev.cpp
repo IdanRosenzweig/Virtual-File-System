@@ -1,9 +1,8 @@
 #include "random_stream_dev.h"
-
-#include <cstdint>
+#include "lib/utility.h"
 
 void random_stream_dev::read(void *buff, int cnt) {
-    uint8_t *dest = (uint8_t *) buff;
+    byte *dest = (byte *) buff;
     for (int i = 0; i < cnt; i++, dest++)
-        *dest = (uint8_t) 'a';
+        *dest = (byte) 'a';
 }

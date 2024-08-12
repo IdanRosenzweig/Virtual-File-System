@@ -1,5 +1,9 @@
 #include "path.h"
 
+#include <string>
+
+#include "lib/utility.h"
+
 path parse_path(const std::string &str) {
     int n = str.size();
 
@@ -20,10 +24,10 @@ path parse_path(const std::string &str) {
                 curr_in++;
             }
         } else {
-            curr_comp.push_back((uint8_t) str[curr_in++]);
+            curr_comp.push_back((byte) str[curr_in++]);
         }
     }
     if (!curr_comp.empty()) p.push_back(curr_comp);
 
-    return std::move(p);
+    return ::move(p);
 }

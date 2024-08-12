@@ -32,7 +32,7 @@ struct node_t {
 
     node_t(node_t &&other) noexcept
         : id(other.id),
-          name(std::move(other.name)),
+          name(::move(other.name)),
           comp_id(other.comp_id),
           refs_id(other.refs_id) {
         other.id = node_id_null;
@@ -55,7 +55,7 @@ struct node_t {
         if (this == &other)
             return *this;
         id = other.id;
-        name = std::move(other.name);
+        name = ::move(other.name);
         comp_id = other.comp_id;
         refs_id = other.refs_id;
         other.id = node_id_null;

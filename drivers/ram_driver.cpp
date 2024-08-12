@@ -1,7 +1,5 @@
 #include "ram_driver.h"
 
-#include <memory>
-
 node_id_t ram_driver::allocte_node() noexcept {
     node_id_t id = nodes_id_gen.generate_id();
     nodes_pool = avl_node<node_id_t, node_t>::insert(nodes_pool, id, node_t(id));

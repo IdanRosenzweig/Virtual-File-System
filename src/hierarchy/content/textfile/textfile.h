@@ -1,8 +1,6 @@
 #ifndef TEXTFILE_H
 #define TEXTFILE_H
 
-#include <utility>
-
 #include "lib/utility.h"
 
 #include "../base_content.h"
@@ -23,7 +21,7 @@ struct textfile : public base_content {
     }
 
     textfile(textfile &&other) noexcept
-        : base_content(std::move(other)) {
+        : base_content(move(other)) {
         memcpy(text, other.text, TEXTFILE_MAX_SZ);
         memset(other.text, 0, TEXTFILE_MAX_SZ);
     }
@@ -39,7 +37,7 @@ struct textfile : public base_content {
     textfile & operator=(textfile &&other) noexcept {
         if (this == &other)
             return *this;
-        base_content::operator =(std::move(other));
+        base_content::operator =(move(other));
         memcpy(text, other.text, TEXTFILE_MAX_SZ);
         memset(other.text, 0, TEXTFILE_MAX_SZ);
         return *this;

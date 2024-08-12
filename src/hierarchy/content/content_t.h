@@ -61,7 +61,7 @@ struct content_t : public content_data {
     }
 
     content_t(content_t &&other) noexcept
-        : content_data(std::move(other)) {
+        : content_data(move(other)) {
     }
 
     content_t &operator=(const content_t &other) {
@@ -74,7 +74,7 @@ struct content_t : public content_data {
     content_t &operator=(content_t &&other) noexcept {
         if (this == &other)
             return *this;
-        content_data::operator =(std::move(other));
+        content_data::operator =(move(other));
         return *this;
     }
 };

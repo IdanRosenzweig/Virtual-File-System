@@ -1,7 +1,7 @@
 #ifndef TRIE_H
 #define TRIE_H
 
-#include <vector>
+#include "utility.h"
 #include "queue.h"
 
 #define PARENT_PTR 1
@@ -62,8 +62,8 @@ public:
         : child_count(other.child_count),
           parent(other.parent),
           marked(other.marked),
-          val(std::move(other.val)),
-          data(std::move(other.data)) {
+          val(move(other.val)),
+          data(move(other.data)) {
         for (int i = 0; i < RANGE; i++) {
             children[i] = other.children[i];
             other.children[i] = nullptr;
@@ -93,8 +93,8 @@ public:
         child_count = other.child_count;
         parent = other.parent;
         marked = other.marked;
-        val = std::move(other.val);
-        data = std::move(other.data);
+        val = move(other.val);
+        data = move(other.data);
         for (int i = 0; i < RANGE; i++) {
             children[i] = other.children[i];
             other.children[i] = nullptr;
@@ -267,23 +267,23 @@ public:
 #endif
 #endif
 
-    static std::vector<trie_node *> get_all_strings(trie_node *node) {
-        if (node == nullptr) return {};
-
-        std::vector<trie_node *> res;
-
-        if (node->marked) res.push_back(node);
-
-        for (int i = 0; i < RANGE; i++) {
-            trie_node *child = node->children[i];
-            if (child == nullptr) continue; // child doesn't exists
-
-            for (trie_node *str: get_all_strings(child))
-                res.push_back(str);
-        }
-
-        return res;
-    }
+    // static std::vector<trie_node *> get_all_strings(trie_node *node) {
+    //     if (node == nullptr) return {};
+    //
+    //     std::vector<trie_node *> res;
+    //
+    //     if (node->marked) res.push_back(node);
+    //
+    //     for (int i = 0; i < RANGE; i++) {
+    //         trie_node *child = node->children[i];
+    //         if (child == nullptr) continue; // child doesn't exists
+    //
+    //         for (trie_node *str: get_all_strings(child))
+    //             res.push_back(str);
+    //     }
+    //
+    //     return res;
+    // }
 
 
     // does the trie contain this string

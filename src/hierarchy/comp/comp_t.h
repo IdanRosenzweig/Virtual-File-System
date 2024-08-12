@@ -82,7 +82,7 @@ struct comp_t : public comp_data {
     }
 
     comp_t(comp_t &&other) noexcept
-        : comp_data(std::move(other)) {
+        : comp_data(move(other)) {
     }
 
     comp_t &operator=(const comp_t &other) {
@@ -95,7 +95,7 @@ struct comp_t : public comp_data {
     comp_t &operator=(comp_t &&other) noexcept {
         if (this == &other)
             return *this;
-        comp_data::operator =(std::move(other));
+        comp_data::operator =(move(other));
         return *this;
     }
 };

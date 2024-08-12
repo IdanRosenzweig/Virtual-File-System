@@ -1,8 +1,6 @@
 #ifndef STREAM_DEV_PT_H
 #define STREAM_DEV_PT_H
 
-#include <utility>
-
 #include "../base_content.h"
 #include "stream_dev.h"
 
@@ -21,7 +19,7 @@ struct stream_dev_pt : public base_content {
     }
 
     stream_dev_pt(stream_dev_pt &&other) noexcept
-        : base_content(std::move(other)),
+        : base_content(move(other)),
           dev_ptr(other.dev_ptr) {
     }
 
@@ -36,7 +34,7 @@ struct stream_dev_pt : public base_content {
     stream_dev_pt & operator=(stream_dev_pt &&other) noexcept {
         if (this == &other)
             return *this;
-        base_content::operator =(std::move(other));
+        base_content::operator =(move(other));
         dev_ptr = other.dev_ptr;
         return *this;
     }

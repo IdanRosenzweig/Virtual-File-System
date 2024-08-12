@@ -1,8 +1,6 @@
 #ifndef HIERARCHY_H
 #define HIERARCHY_H
 
-#include <memory>
-
 #include "node/node.h"
 #include "node/node_id.h"
 #include "path/path.h"
@@ -35,7 +33,7 @@ public:
         comp_id_t comp_id = driver->allocate_comp();
         struct dir dir{};
         dir.id = comp_id;
-        comp_t root_dir(std::move(dir));
+        comp_t root_dir(move(dir));
 
         // allocte empty refs
         refs_id_t refs_id = driver->allocte_refs();

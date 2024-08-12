@@ -1,8 +1,6 @@
 #ifndef SOFTLINK_H
 #define SOFTLINK_H
 
-#include <vector>
-
 #include "../base_comp.h"
 #include "src/hierarchy/ctx_t.h"
 #include "src/hierarchy/path/path.h"
@@ -24,8 +22,8 @@ struct softlink : public base_comp {
     }
 
     softlink(softlink &&other) noexcept
-        : base_comp(std::move(other)),
-          target(std::move(other.target)) {
+        : base_comp(move(other)),
+          target(::move(other.target)) {
     }
 
     softlink & operator=(const softlink &other) {
@@ -39,8 +37,8 @@ struct softlink : public base_comp {
     softlink & operator=(softlink &&other) noexcept {
         if (this == &other)
             return *this;
-        base_comp::operator =(std::move(other));
-        target = std::move(other.target);
+        base_comp::operator =(move(other));
+        target = ::move(other.target);
         return *this;
     }
 };

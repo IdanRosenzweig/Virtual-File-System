@@ -8,8 +8,8 @@ template<size_t MIN_SZ, typename... TYPES>
 struct aligned_storaege {
     // static constexpr size_t alignment = std::max({alignof(TYPES)...});
     static constexpr size_t alignment = operation<max_op, alignof(TYPES)...>::val;
-    // alignas(alignment) uint8_t data[std::max({MIN_SZ, sizeof(TYPES)...})];
-    alignas(alignment) uint8_t data[operation<max_op, MIN_SZ, sizeof(TYPES)...>::val];
+    // alignas(alignment) byte data[std::max({MIN_SZ, sizeof(TYPES)...})];
+    alignas(alignment) byte data[operation<max_op, MIN_SZ, sizeof(TYPES)...>::val];
 };
 
 /** fundamental visitor instantiations */
@@ -35,7 +35,7 @@ struct move_visitor {
     void *src;
 
     template<typename TYPE>
-    void operator()(TYPE *ptr) { new(ptr) TYPE(std::move(*static_cast<TYPE *>(src))); }
+    void operator()(TYPE *ptr) { new(ptr) TYPE(move(*static_cast<TYPE *>(src))); }
 
     void operator()(void) {
     }
@@ -59,7 +59,7 @@ struct union_variant {
     template<typename TYPE>
         requires ( is_same<TYPE, ALTERNATIVES>::val || ... )
     union_variant(TYPE &&val) : empty(false), curr_in(index_of_type<TYPE, ALTERNATIVES...>::index) {
-        new(reinterpret_cast<TYPE *>(storage.data)) TYPE(std::forward<TYPE>(val));
+        new(reinterpret_cast<TYPE *>(storage.data)) TYPE(::forward<TYPE>(val));
     }
 
     union_variant(const union_variant &other) : empty(other.empty), curr_in(other.curr_in) {
@@ -81,7 +81,7 @@ struct union_variant {
     union_variant &operator=(union_variant &&other) noexcept {
         if (this != &other) {
             this->~union_variant();
-            new(this) union_variant(std::move(other));
+            new(this) union_variant(move(other));
         }
         return *this;
     }
@@ -99,7 +99,7 @@ private:
         static auto visit(int index, void *data, VISITOR &&vis) {
             return CURR_IN == index
                        ? vis(reinterpret_cast<TYPE *>(data))
-                       : visit_rec_struct<CURR_IN + 1, REST...>::visit(index, data, std::forward<VISITOR>(vis));
+                       : visit_rec_struct<CURR_IN + 1, REST...>::visit(index, data, ::forward<VISITOR>(vis));
         }
     };
 
@@ -116,7 +116,7 @@ private:
 public:
     template<class VISITOR>
     auto visit(VISITOR &&vis) {
-        return visit_rec_struct<0, ALTERNATIVES...>::visit(curr_in, storage.data, std::forward<VISITOR>(vis));
+        return visit_rec_struct<0, ALTERNATIVES...>::visit(curr_in, storage.data, ::forward<VISITOR>(vis));
     }
 
     inline bool is_empty() noexcept {
@@ -146,7 +146,7 @@ public:
     void set(ARGS &&... args) {
         empty = false;
         curr_in = index_of_type<TYPE, ALTERNATIVES...>::index;
-        new(reinterpret_cast<TYPE *>(storage.data)) TYPE(std::forward<ARGS>(args)...);
+        new(reinterpret_cast<TYPE *>(storage.data)) TYPE(::forward<ARGS>(args)...);
     }
 
     template<typename TYPE>
