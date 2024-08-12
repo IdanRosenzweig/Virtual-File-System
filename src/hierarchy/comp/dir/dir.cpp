@@ -59,10 +59,10 @@ bool dir::has_child(comp_t *dir_comp, ctx_t<node_id_t> child) {
     return avl::count(dir_ptr->children, child);
 }
 
-std::vector<ctx_t<node_id_t> > dir::get_all_children(comp_t *dir_comp) {
+::vector<ctx_t<node_id_t> > dir::get_all_children(comp_t *dir_comp) {
     dir *dir_ptr = comp_t::get_ptr<dir>(dir_comp);
 
-    std::vector<ctx_t<node_id_t> > res;
+    ::vector<ctx_t<node_id_t> > res;
     avl* it = avl::begin(dir_ptr->children);
     while (it != nullptr) {
         res.push_back(it->value);

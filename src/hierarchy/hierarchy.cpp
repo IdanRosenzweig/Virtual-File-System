@@ -54,7 +54,7 @@ ctx_t<node_id_t> hierarchy::mk_direct_node(ctx_t<node_id_t> ctx, const path_comp
 }
 
 ctx_t<node_id_t> hierarchy::mk_path(ctx_t<node_id_t> ctx, const path &p,
-                                    const std::vector<comp_data> &comp_vals) noexcept {
+                                    const ::vector<comp_data> &comp_vals) noexcept {
     if (p.empty()) return ctx;
 
     for (int i = 0; i < p.size() && !is_ctx_null(ctx); i++)
@@ -71,7 +71,7 @@ ctx_t<node_id_t> hierarchy::mk_node(ctx_t<node_id_t> ctx, const path &p, const c
         ctx = mk_direct_node(ctx, p[i], comp_t(dir())); // make empty directory
     if (is_ctx_null(ctx))
         return null_ctx<node_id_t>();
-    if (ctx_t<node_id_t> child = search_node(ctx, path{p.back()}, true, true); !is_ctx_null(child))
+    if (ctx_t<node_id_t> child = search_node(ctx, path(p.back()), true, true); !is_ctx_null(child))
         // node already exists
         return return_on_success ? ctx_t<node_id_t>{} : child;
 
@@ -203,8 +203,9 @@ void hierarchy::rm_node(ctx_t<node_id_t> ctx, bool recursive) noexcept {
             if (!recursive) return;
 
             if (--comp.hardlinks_cnt == 0) {
-                for (const ctx_t<node_id_t> &child: dir::get_all_children(&comp)) // recursivly remove the child nodes
-                    rm_node(child, recursive);
+                auto children = dir::get_all_children(&comp);
+                for (int i = 0; i < children.size(); i++) // recursivly remove the child nodes
+                    rm_node(children[i], recursive);
                 ctx.hier->driver->deallocate_comp(node.comp_id); // deallocate the comp
             } else ctx.hier->driver->write_comp(&comp); // just write back to the driver the decremented count
 
@@ -358,12 +359,15 @@ ctx_t<node_id_t> hierarchy::cp_mount(ctx_t<node_id_t> ctx, const path &src, cons
 ctx_t<node_id_t> hierarchy::mk_textfile(ctx_t<node_id_t> ctx, const path &p) noexcept {
     if (p.empty()) return null_ctx<node_id_t>();
 
-    auto parent_ctx = search_node(ctx, path(p.begin(), --p.end()), true, true);
+    path pref;
+    for (int i = 0; i < p.size() - 1; i++) pref.push_back(p[i]);
+
+    auto parent_ctx = search_node(ctx, pref, true, true);
     content_t _file(content_data(textfile(parent_ctx.hier->driver->allocate_content())));
     parent_ctx.hier->driver->write_content(&_file);
     content_pt pt;
     pt.ptr = content_t::get_id(_file);
-    return mk_direct_node(parent_ctx, *--p.end(), comp_data(pt));
+    return mk_direct_node(parent_ctx, p.back(), comp_data(pt));
 }
 
 void hierarchy::open_textfile(ctx_t<node_id_t> ctx, ctx_t<textfile> *dest) noexcept {

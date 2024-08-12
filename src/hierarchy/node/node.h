@@ -1,8 +1,6 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include <vector>
-
 #include "lib/lib_common.h"
 
 #include "node_id.h"
@@ -13,7 +11,7 @@
 
 struct node_t {
     node_id_t id = node_id_null; // constant, unique id given for each node
-    path_comp name = path_comp_null; // non unique name for the node
+    path_comp name; // non unique name for the node
 
     comp_id_t comp_id = comp_id_null; // pointer to a unique component struct representing this node
     refs_id_t refs_id = refs_id_null; // pointer to unique references struct
@@ -36,7 +34,6 @@ struct node_t {
           comp_id(other.comp_id),
           refs_id(other.refs_id) {
         other.id = node_id_null;
-        other.name = path_comp_null;
         other.comp_id = comp_id_null;
         other.refs_id = refs_id_null;
     }
@@ -59,7 +56,6 @@ struct node_t {
         comp_id = other.comp_id;
         refs_id = other.refs_id;
         other.id = node_id_null;
-        other.name = path_comp_null;
         other.comp_id = comp_id_null;
         other.refs_id = refs_id_null;
         return *this;

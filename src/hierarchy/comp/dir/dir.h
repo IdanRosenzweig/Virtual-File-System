@@ -1,8 +1,7 @@
 #ifndef DIR_H
 #define DIR_H
 
-#include <vector>
-
+#include "lib/vector.h"
 #include "lib/avl_tree.h"
 #include "lib/trie.h"
 
@@ -68,7 +67,7 @@ struct dir : public base_comp {
 
     static bool has_child(comp_t *dir_comp, ctx_t<node_id_t> child);
 
-    static std::vector<ctx_t<node_id_t> > get_all_children(comp_t *dir_comp);
+    static ::vector<ctx_t<node_id_t> > get_all_children(comp_t *dir_comp);
 
     static ctx_t<node_id_t> search_path_comp(comp_t *dir_comp, const path_comp &comp);
 };

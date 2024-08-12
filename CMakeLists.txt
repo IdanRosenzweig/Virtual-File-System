@@ -87,5 +87,6 @@ add_executable(vfs
         lib/queue.h
         lib/utility.h
         lib/utility.cpp
+        lib/vector.h
 
 )

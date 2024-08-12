@@ -251,10 +251,10 @@ public:
 #if VAL_AT_NODE == 1
     // if reversed is false, write the string of the downwards path ancestor->...->child into the dest ptr
     // if reversed is true, write the string of the upwards path child->...->ancestor into the dest ptr
-    // static std::vector<TYPE> get_path_string(trie_node *ancestor, trie_node *child, bool reversed = false) {
+    // static ::vector<TYPE> get_path_string(trie_node *ancestor, trie_node *child, bool reversed = false) {
     //     if (child == nullptr || ancestor == nullptr) return {};
     //
-    //     std::vector<TYPE> str;
+    //     ::vector<TYPE> str;
     //
     //     while (child != ancestor) {
     //         str.push_back(child->val);
@@ -267,10 +267,10 @@ public:
 #endif
 #endif
 
-    // static std::vector<trie_node *> get_all_strings(trie_node *node) {
+    // static ::vector<trie_node *> get_all_strings(trie_node *node) {
     //     if (node == nullptr) return {};
     //
-    //     std::vector<trie_node *> res;
+    //     ::vector<trie_node *> res;
     //
     //     if (node->marked) res.push_back(node);
     //

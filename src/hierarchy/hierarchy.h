@@ -1,6 +1,8 @@
 #ifndef HIERARCHY_H
 #define HIERARCHY_H
 
+#include "lib/vector.h"
+
 #include "node/node.h"
 #include "node/node_id.h"
 #include "path/path.h"
@@ -60,7 +62,7 @@ protected:
 
     // search the path starting from the given root node, create any intermediate nodes if needed
     static ctx_t<node_id_t> mk_path(ctx_t<node_id_t> ctx, const path &p,
-                                    const std::vector<comp_data> &comp_vals) noexcept;
+                                    const ::vector<comp_data> &comp_vals) noexcept;
 
     // search the path going down from the given ctx, create any intermediate directory nodes if needed, and create the end node as given.
     static ctx_t<node_id_t> mk_node(ctx_t<node_id_t> ctx, const path &p, const comp_data &comp_val,
