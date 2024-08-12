@@ -24,9 +24,11 @@ int main() {
 
     /* /bin dir */
     ctx_t<node_id_t> bin_node = hierarchy::mk_dir(fs->get_root_ctx(), parse_path("/bin"));
+    if (is_ctx_null(bin_node)) throw;
 
     ctx_t<textfile> open_file1;
     hierarchy::open_textfile(hierarchy::mk_textfile(bin_node, parse_path("runme")), &open_file1);
+    if (is_ctx_null(open_file1)) throw;
     strcpy((char *) open_file1.val.text, "this is runme file");
     std::cout << "first time: " << open_file1.val.text << std::endl;
     hierarchy::close_textfile(fs, &open_file1.val);
@@ -35,6 +37,7 @@ int main() {
     ctx_t<textfile> open_file2;
     hierarchy::open_textfile(
         hierarchy::mk_hardlink(fs->get_root_ctx(), parse_path("/bin/runme"), parse_path("/bin/exec")), &open_file2);
+    if (is_ctx_null(open_file2)) throw;
     strcpy((char *) open_file2.val.text, "this is exec file");
     std::cout << "second time: " << open_file2.val.text << std::endl;
     hierarchy::close_textfile(fs, &open_file2.val);
@@ -42,6 +45,7 @@ int main() {
 
     /* /home/user dir */
     ctx_t<node_id_t> home_id = hierarchy::mk_dir(fs->get_root_ctx(), parse_path("/home/user"));
+    if (is_ctx_null(home_id)) throw;
     hierarchy::mk_softlink(home_id, parse_path("bin"), softlink({&main_fs, parse_path("/bin")}));
     // from the user home dir
     //
@@ -55,6 +59,7 @@ int main() {
     ctx_t<textfile> open_file3;
     hierarchy::open_textfile(hierarchy::search_node(fs->get_root_ctx(), parse_path("/home/user/bin/exec")),
                              &open_file3);
+    if (is_ctx_null(open_file3)) throw;
     std::cout << "third time: " << open_file3.val.text << std::endl;
     strcpy((char *) open_file3.val.text, "this is a file");
     std::cout << "fourth time: " << open_file3.val.text << std::endl;
