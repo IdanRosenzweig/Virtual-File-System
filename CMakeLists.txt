@@ -88,5 +88,6 @@ add_executable(vfs
         lib/utility.h
         lib/utility.cpp
         lib/vector.h
+        lib/lib_common.cpp
 
 )

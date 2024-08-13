@@ -1,6 +1,7 @@
 #ifndef LIB_COMMON_H
 #define LIB_COMMON_H
 
+using size_t = unsigned long int;
 /** helper for calculating some associate function on a pack of templates (compile time) */
 template<typename OP, auto... VALS>
 struct operation;
@@ -17,8 +18,8 @@ struct operation<OP, VAL> {
 
 /** sample function that can be used with "operation" */
 struct max_op {
-    template<typename T>
-    constexpr T operator()(T a, T b) const {
+    template<typename T, typename D>
+    constexpr auto operator()(T a, D b) const {
         return (a > b) ? a : b;
     }
 };
@@ -62,7 +63,7 @@ template<class T, class U>
 struct is_same;
 
 template<class T, class U>
-struct is_same{
+struct is_same {
     constexpr static auto val = false;
 };
 
@@ -70,5 +71,19 @@ template<class T>
 struct is_same<T, T> {
     constexpr static auto val = true;
 };
+
+// allocation
+// void *operator new(size_t sz);
+//
+// void *operator new[](size_t sz);
+//
+// void *operator new(size_t sz, void *ptr);
+//
+// void *operator new [](size_t sz, void *ptr);
+//
+// void operator delete(void *ptr) noexcept;
+//
+// void operator delete[](void *ptr) noexcept;
+#include <new>
 
 #endif //LIB_COMMON_H

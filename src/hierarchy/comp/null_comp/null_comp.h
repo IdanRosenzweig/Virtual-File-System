@@ -35,7 +35,7 @@ struct null_comp : public base_comp {
         return true;
     }
 
-    friend std::size_t hash_value(const null_comp &obj) {
+    friend size_t hash_value(const null_comp &obj) {
         return 6969;
     }
 };

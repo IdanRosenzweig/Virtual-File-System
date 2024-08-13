@@ -1,7 +1,7 @@
 #ifndef PATH_COMP_H
 #define PATH_COMP_H
 
-#include <string>
+#include <string> // todo uncomment this?
 #include "lib/utility.h"
 #include "lib/vector.h"
 

@@ -357,17 +357,38 @@ ctx_t<node_id_t> hierarchy::cp_mount(ctx_t<node_id_t> ctx, const path &src, cons
 
 
 ctx_t<node_id_t> hierarchy::mk_textfile(ctx_t<node_id_t> ctx, const path &p) noexcept {
-    if (p.empty()) return null_ctx<node_id_t>();
+    // if (p.empty()) return null_ctx<node_id_t>();
+    //
+    // path pref;
+    // for (int i = 0; i < p.size() - 1; i++) pref.push_back(p[i]);
+    // auto parent_ctx = search_node(ctx, pref, true, true);
+    //
+    // content_t _file(content_data(textfile(parent_ctx.hier->driver->allocate_content())));
+    // parent_ctx.hier->driver->write_content(&_file);
+    //
+    // content_pt pt;
+    // pt.ptr = content_t::get_id(_file);
+    //
+    // return mk_direct_node(parent_ctx, p.back(), comp_data(pt));
 
-    path pref;
-    for (int i = 0; i < p.size() - 1; i++) pref.push_back(p[i]);
+    // make node with empty comp
+    auto node = mk_node(ctx, p, comp_data(null_comp()), true);
+    if (is_ctx_null(node)) return null_ctx<node_id_t>();
 
-    auto parent_ctx = search_node(ctx, pref, true, true);
-    content_t _file(content_data(textfile(parent_ctx.hier->driver->allocate_content())));
-    parent_ctx.hier->driver->write_content(&_file);
+    // allocate and write the content
+    content_t file(content_data(textfile( node.hier->driver->allocate_content())));
+    node.hier->driver->write_content(&file);
+
+    // make the comp
     content_pt pt;
-    pt.ptr = content_t::get_id(_file);
-    return mk_direct_node(parent_ctx, p.back(), comp_data(pt));
+    pt.ptr = content_t::get_id(file);
+    pt.id = stat_comp_id(node).val;
+
+    // write the comp
+    comp_t comp(pt);
+    node.hier->driver->write_comp(&comp);
+
+    return node;
 }
 
 void hierarchy::open_textfile(ctx_t<node_id_t> ctx, ctx_t<textfile> *dest) noexcept {
