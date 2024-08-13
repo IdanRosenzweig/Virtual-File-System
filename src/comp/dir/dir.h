@@ -7,8 +7,8 @@
 
 #include "../base_comp.h"
 #include "src/hierarchy/ctx_t.h"
-#include "src/hierarchy/node/node_id.h"
-#include "src/hierarchy/path/path.h"
+#include "src/node/node_id.h"
+#include "src/path/path.h"
 
 struct comp_t;
 

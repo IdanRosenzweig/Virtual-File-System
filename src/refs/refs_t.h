@@ -4,7 +4,7 @@
 #include "lib/avl_tree.h"
 
 #include "refs_id.h"
-#include "src/hierarchy/node/node_id.h"
+#include "src/node/node_id.h"
 
 struct refs_t {
     refs_id_t id = refs_id_null;

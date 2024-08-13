@@ -1,7 +1,7 @@
 #ifndef CONTENT_ID_H
 #define CONTENT_ID_H
 
-#include "lib/num_wrapper.h"
+#include "../../../lib/num_wrapper.h"
 
 type_define(content_id_t, unsigned int)
 

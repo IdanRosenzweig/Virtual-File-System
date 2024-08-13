@@ -14,41 +14,41 @@ add_executable(vfs
         src/hierarchy/ctx_t.h
 
         # node
-        src/hierarchy/node/node_id.h
+        src/node/node_id.h
 
         # path
-        src/hierarchy/path/path.h
-        src/hierarchy/path/path.cpp
-        src/hierarchy/path/path_comp.h
+        src/path/path.h
+        src/path/path.cpp
+        src/path/path_comp.h
 
         # comps
-        src/hierarchy/comp/comp_t.h
-        src/hierarchy/comp/comp_id.h
-        src/hierarchy/comp/base_comp.h
+        src/comp/comp_t.h
+        src/comp/comp_id.h
+        src/comp/base_comp.h
 
-        src/hierarchy/comp/null_comp/null_comp.h
+        src/comp/null_comp/null_comp.h
 
-        src/hierarchy/comp/dir/dir.h
-        src/hierarchy/comp/dir/dir.cpp
+        src/comp/dir/dir.h
+        src/comp/dir/dir.cpp
 
-        src/hierarchy/comp/softlink/softlink.h
+        src/comp/softlink/softlink.h
 
         # refs
-        src/hierarchy/refs/refs_t.h
-        src/hierarchy/refs/refs_id.h
+        src/refs/refs_t.h
+        src/refs/refs_id.h
 
         # content
-        src/hierarchy/content/content_t.h
-        src/hierarchy/content/content_id.h
-        src/hierarchy/content/base_content.h
+        src/comp/content/content_t.h
+        src/comp/content/content_id.h
+        src/comp/content/base_content.h
 
-        src/hierarchy/content/null_content/null_content.h
+        src/comp/content/null_content/null_content.h
 
-        src/hierarchy/content/textfile/textfile.cpp
-        src/hierarchy/content/textfile/textfile.h
+        src/comp/content/textfile/textfile.cpp
+        src/comp/content/textfile/textfile.h
 
-        src/hierarchy/comp/mount/mount.h
-        src/hierarchy/comp/mount/mount.h
+        src/comp/mount/mount.h
+        src/comp/mount/mount.h
 
         # content fs
         src/hierarchy/hier_id.h
@@ -67,8 +67,8 @@ add_executable(vfs
 
         # app
         app/test.cpp
-        src/hierarchy/content/ctl_dev/ctl_dev_pt.h
-        src/hierarchy/content/ctl_dev/ctl_dev.h
+        src/comp/content/ctl_dev/ctl_dev_pt.h
+        src/comp/content/ctl_dev/ctl_dev.h
         ctl_devs/proc/proc_ctl_dev.cpp
         ctl_devs/proc/proc_ctl_dev.h
         ctl_devs/sys/sys_ctl_dev.cpp
@@ -76,13 +76,13 @@ add_executable(vfs
         ctl_devs/hw/hw_ctl_dev.cpp
         ctl_devs/hw/hw_ctl_dev.h
         lib/num_wrapper.h
-        src/hierarchy/content/stream_dev/stream_dev.h
-        src/hierarchy/content/stream_dev/stream_dev_pt.h
-        src/hierarchy/content/block_dev/block_dev.h
+        src/comp/content/stream_dev/stream_dev.h
+        src/comp/content/stream_dev/stream_dev_pt.h
+        src/comp/content/block_dev/block_dev.h
         stream_devs/random_stream_dev.cpp
         stream_devs/random_stream_dev.h
 
-        src/hierarchy/comp/content/content_pt.h
+        src/comp/content/content_pt.h
         lib/avl_tree.h
         lib/queue.h
         lib/utility.h

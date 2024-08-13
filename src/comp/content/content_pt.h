@@ -2,7 +2,7 @@
 #define CONTENT_PT_H
 
 #include "../base_comp.h"
-#include "src/hierarchy/content/content_id.h"
+#include "content_id.h"
 
 struct content_pt : public base_comp {
     content_id_t ptr = content_id_null;

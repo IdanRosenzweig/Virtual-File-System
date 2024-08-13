@@ -3,7 +3,7 @@
 
 #include "../base_comp.h"
 #include "src/hierarchy/ctx_t.h"
-#include "src/hierarchy/path/path.h"
+#include "src/path/path.h"
 
 // a node that points to another path
 struct softlink : public base_comp {

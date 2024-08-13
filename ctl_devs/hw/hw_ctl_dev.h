@@ -1,7 +1,7 @@
 #ifndef HW_CTL_DEV_H
 #define HW_CTL_DEV_H
 
-#include "src/hierarchy/content/ctl_dev/ctl_dev.h"
+#include "src/comp/content/ctl_dev/ctl_dev.h"
 
 struct hw_ctl_dev : public ctl_dev {
     enum codes : code_t {

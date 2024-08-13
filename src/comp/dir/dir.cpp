@@ -1,6 +1,6 @@
 #include "dir.h"
 
-#include "../../hierarchy.h"
+#include "src/hierarchy/hierarchy.h"
 #include "../comp_t.h"
 
 void dir::add_child_to_dir(ctx_t<comp_t> &dir_comp, ctx_t<node_id_t> child, bool add_to_refs) {

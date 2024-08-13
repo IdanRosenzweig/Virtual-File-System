@@ -1,13 +1,11 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include "lib/lib_common.h"
-
 #include "node_id.h"
-#include "src/hierarchy/path/path_comp.h"
-#include "src/hierarchy/comp/comp_id.h"
-#include "src/hierarchy/content/content_id.h"
-#include "src/hierarchy/refs/refs_id.h"
+#include "src/path/path_comp.h"
+#include "src/comp/comp_id.h"
+#include "../comp/content/content_id.h"
+#include "src/refs/refs_id.h"
 
 struct node_t {
     node_id_t id = node_id_null; // constant, unique id given for each node

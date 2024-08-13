@@ -1,7 +1,7 @@
 #ifndef RANDOM_STREAM_DEV_H
 #define RANDOM_STREAM_DEV_H
 
-#include "src/hierarchy/content/stream_dev/stream_dev.h"
+#include "src/comp/content/stream_dev/stream_dev.h"
 
 class random_stream_dev : public stream_dev {
 public:

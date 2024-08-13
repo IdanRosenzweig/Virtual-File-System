@@ -1,8 +1,8 @@
 #ifndef CONTENT_H
 #define CONTENT_H
 
-#include "lib/lib_common.h"
-#include "lib/union_variant.h"
+#include "../../../lib/lib_common.h"
+#include "../../../lib/union_variant.h"
 
 #include "content_id.h"
 

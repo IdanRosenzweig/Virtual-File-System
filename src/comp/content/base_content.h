@@ -1,7 +1,7 @@
 #ifndef BASE_CONTENT_H
 #define BASE_CONTENT_H
 
-#include "src/hierarchy/content/content_id.h"
+#include "content_id.h"
 
 struct base_content {
     content_id_t id = content_id_null;

@@ -1,10 +1,10 @@
 #ifndef BASIC_DRIVER_H
 #define BASIC_DRIVER_H
 
-#include "node/node.h"
-#include "comp/comp_t.h"
-#include "refs/refs_t.h"
-#include "content/content_t.h"
+#include "src/node/node.h"
+#include "src/comp/comp_t.h"
+#include "src/refs/refs_t.h"
+#include "../comp/content/content_t.h"
 
 struct basic_driver {
     friend struct dir;

@@ -3,10 +3,10 @@
 
 #include "lib/vector.h"
 
-#include "node/node.h"
-#include "node/node_id.h"
-#include "path/path.h"
-#include "content/content_t.h"
+#include "src/node/node.h"
+#include "src/node/node_id.h"
+#include "src/path/path.h"
+#include "../comp/content/content_t.h"
 
 #include "basic_driver.h"
 #include "ctx_t.h"
