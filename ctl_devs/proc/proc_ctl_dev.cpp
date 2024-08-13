@@ -1,9 +1,9 @@
 #include "proc_ctl_dev.h"
 
-#include <fcntl.h>
-#include <unistd.h>
-#include <linux/limits.h>
-#include "errno.h"
+// #include <fcntl.h>
+// #include <unistd.h>
+// #include <linux/limits.h>
+// #include "errno.h"
 
 void proc_ctl_dev::access(code_t code, byte* data, int data_sz, byte* res) {
 //     errno = 0;

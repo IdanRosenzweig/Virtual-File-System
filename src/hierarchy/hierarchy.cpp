@@ -1,6 +1,6 @@
 #include "hierarchy.h"
 
-#include <iostream>
+// #include <iostream>
 
 ctx_t<node_id_t> hierarchy::mk_direct_node(ctx_t<node_id_t> ctx, const path_comp &p,
                                            const comp_data &comp_val) noexcept {
