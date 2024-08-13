@@ -148,7 +148,12 @@ public:
 
     static ctx_t<node_id_t> cp_mount(ctx_t<node_id_t> ctx, const path &src, const path &dest) noexcept;
 
+    /** content point specific funcs */
+private:
+    ctx_t<node_id_t> mk_content_pt(ctx_t<node_id_t> ctx, const path &p, const content_t& content) noexcept;
+
     /** textfile specific funcs */
+public:
     // search the path going down from the given root node, create any intermediate directory nodes if needed, and create an empty textfile at the end
     // (this function is just a wrapper around mk_node)
     static ctx_t<node_id_t> mk_textfile(ctx_t<node_id_t> ctx, const path &p) noexcept;

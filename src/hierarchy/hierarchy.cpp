@@ -355,6 +355,27 @@ ctx_t<node_id_t> hierarchy::cp_mount(ctx_t<node_id_t> ctx, const path &src, cons
     return dest_ctx;
 }
 
+ctx_t<node_id_t> hierarchy::mk_content_pt(ctx_t<node_id_t> ctx, const path &p, const content_t &content) noexcept {
+    // make node with empty comp
+    auto node = mk_node(ctx, p, comp_data(null_comp()), true);
+    if (is_ctx_null(node)) return null_ctx<node_id_t>();
+
+    // allocate id for the content and write it to driver
+    content_t::set_id(content, node.hier->driver->allocate_content());
+    node.hier->driver->write_content(&content);
+
+    // make the comp
+    content_pt pt;
+    pt.ptr = content_t::get_id(content);
+    pt.id = stat_comp_id(node).val;
+
+    // write the comp
+    comp_t comp(pt);
+    node.hier->driver->write_comp(&comp);
+
+    return node;
+}
+
 
 ctx_t<node_id_t> hierarchy::mk_textfile(ctx_t<node_id_t> ctx, const path &p) noexcept {
     // if (p.empty()) return null_ctx<node_id_t>();
@@ -451,37 +472,40 @@ ctx_t<node_id_t> hierarchy::mk_hardlink(ctx_t<node_id_t> ctx, const path &src, c
     //
     // return dest_ctx;
 
-
+    // source node
     ctx_t<node_id_t> src_ctx = search_node(ctx, src, true, false);
     if (is_ctx_null(src_ctx)) return null_ctx<node_id_t>();
 
     node_t src_node;
     src_ctx.hier->driver->read_node(src_ctx.val, &src_node);
-    if (src_ctx.hier->driver->read_comp_type(src_node.comp_id) == comp_type::null) return null_ctx<node_id_t>();
-    // source is null
+    if (src_ctx.hier->driver->read_comp_type(src_node.comp_id) == comp_type::null) // source is a null comp
+        return null_ctx<node_id_t>();
 
-
+    // dest node
     ctx_t<node_id_t> dest_ctx = mk_node(ctx, dest, comp_t(null_comp()), false); // make dest node (in case not exist)
     if (is_ctx_null(dest_ctx)) return null_ctx<node_id_t>();
 
     node_t dest_node;
     dest_ctx.hier->driver->read_node(dest_ctx.val, &dest_node);
-    if (dest_ctx.hier->driver->read_comp_type(dest_node.comp_id) != comp_type::null) return null_ctx<node_id_t>();
-    // dest node already exists and is non null
+    if (dest_ctx.hier->driver->read_comp_type(dest_node.comp_id) != comp_type::null) // dest node already exists and is non null
+        return null_ctx<node_id_t>();
 
+    // ensure the source and dest nodes are under the same hierarchy
+    if (src_ctx.hier != dest_ctx.hier) return null_ctx<node_id_t>();
+    hierarchy* hier = src_ctx.hier;
 
-    // set the component id
+    // copy set the component id to the dest node
     dest_node.comp_id = src_node.comp_id;
 
-    // increment the comp hardlinks count
+    // increment the comp's hardlink count
     comp_t comp;
-    src_ctx.hier->driver->read_comp(src_node.comp_id, &comp);
+    hier->driver->read_comp(src_node.comp_id, &comp);
     ++comp.hardlinks_cnt;
-    src_ctx.hier->driver->write_comp(&comp);
+    hier->driver->write_comp(&comp);
 
-    // write the nodes back to driver
-    dest_ctx.hier->driver->write_node(&src_node);
-    src_ctx.hier->driver->write_node(&dest_node);
+    // write the dest node back to driver
+    hier->driver->write_node(&dest_node);
+    // hier->driver->write_node(&src_node);
 
     return dest_ctx;
 }

@@ -43,6 +43,22 @@ struct content_t : public content_data {
         // return std::visit([&](auto &obj) { return obj.id; }, val);
     }
 
+    struct set_id_visitor {
+        content_id_t id;
+
+        template<typename T>
+        auto operator()(T *ptr) {
+            ptr->id = id;
+        }
+
+        void operator()(void) {
+        }
+    };
+
+    static inline void set_id(const content_t &val, content_id_t id) {
+        ((content_data &) val).visit(set_id_visitor(id));
+    }
+
     template<typename T>
     static inline T *get_ptr(content_t *val) {
         return val->get_by_type<T>();
