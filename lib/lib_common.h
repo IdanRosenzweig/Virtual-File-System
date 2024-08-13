@@ -73,17 +73,16 @@ struct is_same<T, T> {
 };
 
 // allocation
-// void *operator new(size_t sz);
-//
-// void *operator new[](size_t sz);
-//
-// void *operator new(size_t sz, void *ptr);
-//
-// void *operator new [](size_t sz, void *ptr);
-//
-// void operator delete(void *ptr) noexcept;
-//
-// void operator delete[](void *ptr) noexcept;
-#include <new>
+void *operator new(size_t sz);
+
+void *operator new[](size_t sz);
+
+void *operator new(size_t sz, void *ptr);
+
+void *operator new [](size_t sz, void *ptr);
+
+void operator delete(void *ptr) noexcept;
+
+void operator delete[](void *ptr) noexcept;
 
 #endif //LIB_COMMON_H
