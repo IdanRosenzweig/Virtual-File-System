@@ -22,19 +22,18 @@ int main() {
     auto fs = &main_fs;
 
     /* /bin dir */
-    // hier::mk_dir(fs->get_root_ctx(), parse_path("/bin"));
     char *execs[] = {
-        // "/bin/file",
-        // "/bin/id",
-        // "/bin/whoami",
-        // "/bin/data",
-        // "/bin/ls",
-        // "/bin/ps",
-        // "/bin/htop",
-        // "/bin/cat",
-        // "/bin/less",
-        // "/bin/pwd",
-        // "/bin/stat",
+        "/bin/file",
+        "/bin/id",
+        "/bin/whoami",
+        "/bin/data",
+        "/bin/ls",
+        "/bin/ps",
+        "/bin/htop",
+        "/bin/cat",
+        "/bin/less",
+        "/bin/pwd",
+        "/bin/stat",
     };
     for (char *exec: execs)
         hierarchy::mk_textfile(fs->get_root_ctx(), parse_path(exec));
@@ -42,74 +41,73 @@ int main() {
 
     /* /proc dir */
     char *procs[] = {
-        // "/proc/auxv",
-        // "/proc/cmdline",
-        // "/proc/comm",
-        // "/proc/cgroup",
-        // "/proc/environ",
-        // "/proc/exe",
-        // "/proc/fd",
-        // "/proc/limits",
-        // "/proc/net",
-        // "/proc/maps",
-        // "/proc/root",
-        // "/proc/pagemap",
-        // "/proc/stack",
-        // "/proc/syscal",
+        "/proc/auxv",
+        "/proc/cmdline",
+        "/proc/comm",
+        "/proc/cgroup",
+        "/proc/environ",
+        "/proc/exe",
+        "/proc/fd",
+        "/proc/limits",
+        "/proc/net",
+        "/proc/maps",
+        "/proc/root",
+        "/proc/pagemap",
+        "/proc/stack",
+        "/proc/syscal",
     };
     for (char *proc: procs)
         hierarchy::mk_textfile(fs->get_root_ctx(), parse_path(proc));
 
 
     /* /tmp dir */
-    hierarchy::mk_dir(fs->get_root_ctx(), parse_path("/tmp"));
     char *tmps[] = {
-        // "/tmp/file1",
-        // "/tmp/file2",
-        // "/tmp/file3",
+        "/tmp/file1",
+        "/tmp/file2",
+        "/tmp/file3",
     };
     for (char *tmp: tmps)
         hierarchy::mk_textfile(fs->get_root_ctx(), parse_path(tmp));
 
 
     /* /home dir */
-    // hierarchy::mk_softlink(fs->get_root_ctx(),
-    //                        parse_path("/home/user/bin"),
-    //                        softlink({&main_fs, parse_path("/bin")})
-    // );
-    // hierarchy::mk_softlink(fs->get_root_ctx(),
-    //                        parse_path("/home/user/tmp"),
-    //                        softlink({&main_fs, parse_path("/tmp")})
-    // );
-    // hierarchy::mk_softlink(fs->get_root_ctx(),
-    //                        parse_path("/home/user/proc"),
-    //                        softlink({&main_fs, parse_path("/proc")})
-    // );
+    hierarchy::mk_softlink(fs->get_root_ctx(),
+                           parse_path("/home/user/bin"),
+                           softlink({&main_fs, parse_path("/bin")})
+    );
+    hierarchy::mk_softlink(fs->get_root_ctx(),
+                           parse_path("/home/user/tmp"),
+                           softlink({&main_fs, parse_path("/tmp")})
+    );
+    hierarchy::mk_softlink(fs->get_root_ctx(),
+                           parse_path("/home/user/proc"),
+                           softlink({&main_fs, parse_path("/proc")})
+    );
 
 
     /* textfile test */
     ctx_t<textfile> open_file1;
     hierarchy::open_textfile(hierarchy::mk_textfile(fs->get_root_ctx(), parse_path("/tmp/testfile")), &open_file1);
-    strcpy((char *) open_file1.val.text, "this is testfile");
+    strcpy(open_file1.val.text, "this is testfile");
     std::cout << "first time: " << open_file1.val.text << std::endl;
     hierarchy::close_textfile(fs, &open_file1.val);
 
-    // ctx_t<textfile> open_file2;
-    // hierarchy::open_textfile(
-    //     hierarchy::mk_hardlink(fs->get_root_ctx(), parse_path("/tmp/testfile"), parse_path("/home/user/tmp/testfile")),
-    //     &open_file2);
-    // strcpy((char *) open_file2.val.text, "this is second test");
-    // std::cout << "second time: " << open_file2.val.text << std::endl;
-    // hierarchy::close_textfile(fs, &open_file2.val);
-    //
-    // // hierarchy::rm_node(hierarchy::search_node(fs->get_root_ctx(), parse_path("/tmp/testfile")), true);
-    // ctx_t<textfile> open_file3;
-    // hierarchy::open_textfile(hierarchy::search_node(fs->get_root_ctx(), parse_path("/home/user/tmp/testfile")),
-    //                          &open_file3);
-    // std::cout << "third time: " << open_file3.val.text << std::endl;
-    // strcpy((char *) open_file3.val.text, "this is a file");
-    // std::cout << "fourth time: " << open_file3.val.text << std::endl;
-    // hierarchy::close_textfile(fs, &open_file3.val);
+    ctx_t<textfile> open_file2;
+    hierarchy::open_textfile(
+        hierarchy::mk_hardlink(fs->get_root_ctx(), parse_path("/tmp/testfile"), parse_path("/links/testfile")),
+        &open_file2);
+    strcpy(open_file2.val.text, "this is second test");
+    std::cout << "second time: " << open_file2.val.text << std::endl;
+    hierarchy::close_textfile(fs, &open_file2.val);
+
+    // hierarchy::rm_node(hierarchy::search_node(fs->get_root_ctx(), parse_path("/tmp/testfile")), true);
+    ctx_t<textfile> open_file3;
+    hierarchy::open_textfile(hierarchy::search_node(fs->get_root_ctx(), parse_path("/links/testfile")),
+                             &open_file3);
+    std::cout << "third time: " << open_file3.val.text << std::endl;
+    strcpy(open_file3.val.text, "this is a file");
+    std::cout << "fourth time: " << open_file3.val.text << std::endl;
+    hierarchy::close_textfile(fs, &open_file3.val);
 
 
     // latency test
