@@ -124,4 +124,6 @@ int main() {
     std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() <<
             "[ms]" << std::endl;
 
+
+    // hierarchy::mk_mount(fs->get_root_ctx(), parse_path("/mnt/proc"), mount())
 }
