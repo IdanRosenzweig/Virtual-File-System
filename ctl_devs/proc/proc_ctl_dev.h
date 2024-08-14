@@ -9,8 +9,8 @@ struct proc_ctl_dev : public ctl_dev {
         GET_CWD_LINK, GET_ROOT_LINK
     };
 
-    void access(code_t code, byte* data, int data_sz, byte* dest) override;
-    void access(code_t* codes, int code_sz, byte* data, int data_sz, byte* dest) override;
+    int access(code_t code, byte* data, int data_sz, byte* dest) override;
+    int access(code_t* codes, int code_sz, byte* data, int data_sz, byte* dest) override;
 };
 
 

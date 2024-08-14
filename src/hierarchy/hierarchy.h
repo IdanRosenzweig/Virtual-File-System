@@ -150,31 +150,27 @@ public:
 
     /** content point specific funcs */
 private:
-    ctx_t<node_id_t> mk_content_pt(ctx_t<node_id_t> ctx, const path &p, const content_t& content) noexcept;
+    static ctx_t<node_id_t> mk_content_pt(ctx_t<node_id_t> ctx, const path &p, const content_t &content) noexcept;
 
     /** textfile specific funcs */
 public:
     // search the path going down from the given root node, create any intermediate directory nodes if needed, and create an empty textfile at the end
-    // (this function is just a wrapper around mk_node)
+    // (this function is just a wrapper around mk_content_pt)
     static ctx_t<node_id_t> mk_textfile(ctx_t<node_id_t> ctx, const path &p) noexcept;
 
     static void open_textfile(ctx_t<node_id_t> ctx, ctx_t<textfile> *dest) noexcept;
 
     static void close_textfile(hierarchy *fs, textfile *file) noexcept;
 
-    // /** ctl dev specific funcs */
-    // // search the path going down from the given root node, create any intermediate directory nodes if needed, and create an empty textfile at the end
-    // // (this function is just a wrapper around mk_node)
-    // static ctx_t<std::unique_ptr<ctl_dev_pt>> stat_ctl_dev_pt(ctx_t<node_id_t> ctx) noexcept;
-    //
-    // static ctx_t<node_id_t> mk_ctl_dev_pt(ctx_t<node_id_t> ctx, const path &p, const ctl_dev_pt& pt) noexcept;
-    //
-    // /** stream dev specific funcs */
-    // // search the path going down from the given root node, create any intermediate directory nodes if needed, and create an empty textfile at the end
-    // // (this function is just a wrapper around mk_node)
-    // static ctx_t<std::unique_ptr<stream_dev_pt>> stat_stream_dev_pt(ctx_t<node_id_t> ctx) noexcept;
-    //
-    // static ctx_t<node_id_t> mk_stream_dev_pt(ctx_t<node_id_t> ctx, const path &p, const stream_dev_pt& pt) noexcept;
+    /** ctl dev specific funcs */
+    static void stat_ctl_dev_pt(ctx_t<node_id_t> ctx, ctx_t<ctl_dev_pt> *dest) noexcept;
+
+    static ctx_t<node_id_t> mk_ctl_dev_pt(ctx_t<node_id_t> ctx, const path &p, ctl_dev *dev) noexcept;
+
+    /** stream dev specific funcs */
+    static void stat_stream_dev_pt(ctx_t<node_id_t> ctx, ctx_t<stream_dev_pt> *dest) noexcept;
+
+    static ctx_t<node_id_t> mk_stream_dev_pt(ctx_t<node_id_t> ctx, const path &p, stream_dev *dev) noexcept;
 
     /** hardlinking */
     static ctx_t<node_id_t> mk_hardlink(ctx_t<node_id_t> ctx, const path &src, const path &dest);

@@ -378,38 +378,25 @@ ctx_t<node_id_t> hierarchy::mk_content_pt(ctx_t<node_id_t> ctx, const path &p, c
 
 
 ctx_t<node_id_t> hierarchy::mk_textfile(ctx_t<node_id_t> ctx, const path &p) noexcept {
-    // if (p.empty()) return null_ctx<node_id_t>();
+    // // make node with empty comp
+    // auto node = mk_node(ctx, p, comp_data(null_comp()), true);
+    // if (is_ctx_null(node)) return null_ctx<node_id_t>();
     //
-    // path pref;
-    // for (int i = 0; i < p.size() - 1; i++) pref.push_back(p[i]);
-    // auto parent_ctx = search_node(ctx, pref, true, true);
+    // // allocate and write the content
+    // content_t file(content_data(textfile( node.hier->driver->allocate_content())));
+    // node.hier->driver->write_content(&file);
     //
-    // content_t _file(content_data(textfile(parent_ctx.hier->driver->allocate_content())));
-    // parent_ctx.hier->driver->write_content(&_file);
-    //
+    // // make the comp
     // content_pt pt;
-    // pt.ptr = content_t::get_id(_file);
+    // pt.ptr = content_t::get_id(file);
+    // pt.id = stat_comp_id(node).val;
     //
-    // return mk_direct_node(parent_ctx, p.back(), comp_data(pt));
-
-    // make node with empty comp
-    auto node = mk_node(ctx, p, comp_data(null_comp()), true);
-    if (is_ctx_null(node)) return null_ctx<node_id_t>();
-
-    // allocate and write the content
-    content_t file(content_data(textfile( node.hier->driver->allocate_content())));
-    node.hier->driver->write_content(&file);
-
-    // make the comp
-    content_pt pt;
-    pt.ptr = content_t::get_id(file);
-    pt.id = stat_comp_id(node).val;
-
-    // write the comp
-    comp_t comp(pt);
-    node.hier->driver->write_comp(&comp);
-
-    return node;
+    // // write the comp
+    // comp_t comp(pt);
+    // node.hier->driver->write_comp(&comp);
+    //
+    // return node;
+    return mk_content_pt(ctx, p, content_t(textfile()));
 }
 
 void hierarchy::open_textfile(ctx_t<node_id_t> ctx, ctx_t<textfile> *dest) noexcept {
@@ -422,21 +409,21 @@ void hierarchy::close_textfile(hierarchy *fs, textfile *file) noexcept {
 }
 
 
-// ctx_t<std::unique_ptr<ctl_dev_pt> > hierarchy::stat_ctl_dev_pt(ctx_t<node_id_t> ctx) noexcept {
-//     return stat_content<ctl_dev_pt>(stat_content_id(ctx));
-// }
-//
-// ctx_t<node_id_t> hierarchy::mk_ctl_dev_pt(ctx_t<node_id_t> ctx, const path &p, const ctl_dev_pt &pt) noexcept {
-//     return mk_node(ctx, p, comp_data(null_comp()), content_data(pt), true);
-// }
-//
-// ctx_t<std::unique_ptr<stream_dev_pt> > hierarchy::stat_stream_dev_pt(ctx_t<node_id_t> ctx) noexcept {
-//     return stat_content<stream_dev_pt>(stat_content_id(ctx));
-// }
-//
-// ctx_t<node_id_t> hierarchy::mk_stream_dev_pt(ctx_t<node_id_t> ctx, const path &p, const stream_dev_pt &pt) noexcept {
-//     return mk_node(ctx, p, comp_data(null_comp()), content_data(pt), true);
-// }
+void hierarchy::stat_ctl_dev_pt(ctx_t<node_id_t> ctx, ctx_t<ctl_dev_pt>* dest) noexcept {
+    return stat_content<ctl_dev_pt>(stat_content_id(ctx), dest);
+}
+
+ctx_t<node_id_t> hierarchy::mk_ctl_dev_pt(ctx_t<node_id_t> ctx, const path &p, ctl_dev *dev) noexcept {
+    return mk_content_pt(ctx, p, content_t(ctl_dev_pt(dev)));
+}
+
+void hierarchy::stat_stream_dev_pt(ctx_t<node_id_t> ctx, ctx_t<stream_dev_pt>* dest) noexcept {
+    return stat_content<stream_dev_pt>(stat_content_id(ctx), dest);
+}
+
+ctx_t<node_id_t> hierarchy::mk_stream_dev_pt(ctx_t<node_id_t> ctx, const path &p, stream_dev *dev) noexcept {
+    return mk_content_pt(ctx, p, content_t(stream_dev_pt(dev)));
+}
 
 
 ctx_t<node_id_t> hierarchy::mk_hardlink(ctx_t<node_id_t> ctx, const path &src, const path &dest) {

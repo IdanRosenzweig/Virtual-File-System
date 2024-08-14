@@ -125,5 +125,15 @@ int main() {
             "[ms]" << std::endl;
 
 
-    // hierarchy::mk_mount(fs->get_root_ctx(), parse_path("/mnt/proc"), mount())
+    /* procfs */
+    hierarchy::mk_ctl_dev_pt(fs->get_root_ctx(), parse_path("/ctl/proc"), &proc_ctl);
+
+    ctx_t<ctl_dev_pt> pt;
+    hierarchy::stat_ctl_dev_pt(hierarchy::search_node(fs->get_root_ctx(), parse_path("/ctl/proc")), &pt);
+
+#define BUFF_SZ 1000
+    char buff[BUFF_SZ] = {};
+    pt.val.dev_ptr->access(proc_ctl_dev::GET_CWD_LINK, "\x59\x04", 2,  buff);
+
+    std::cout << buff;
 }

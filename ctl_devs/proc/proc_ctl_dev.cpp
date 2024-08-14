@@ -6,7 +6,7 @@
 #include <linux/limits.h>
 #include "errno.h"
 
-void proc_ctl_dev::access(code_t code, byte *data, int data_sz, byte *dest) {
+int proc_ctl_dev::access(code_t code, byte *data, int data_sz, byte *dest) {
     int pid = 0;
     for (int i = 0, pow = 1; i < data_sz; i++, pow *= 256) pid += data[i] * pow;
 
@@ -20,21 +20,18 @@ void proc_ctl_dev::access(code_t code, byte *data, int data_sz, byte *dest) {
             int cnt;
 
             int fd = open(path, O_RDONLY);
-            if (fd == -1) return;
+            if (fd == -1) return 0;
 
             cnt = read(fd, args, ARGS_MAX);
-            if (cnt == -1) {
-                close(fd);
-                return;
-            }
+            close(fd);
+            if (cnt == -1) return 0;
+
             for (int i = 0; i < cnt; i++) {
                 if (args[i] == 0 && i + 1 != cnt) dest[i] = ' ';
                 else dest[i] = args[i];
             }
 
-        stop:
-            if (fd != -1) close(fd);
-            break;
+            return cnt;
         }
         case codes::GET_ENVIRON: {
             char path[PATH_MAX] = {};
@@ -45,20 +42,17 @@ void proc_ctl_dev::access(code_t code, byte *data, int data_sz, byte *dest) {
             int cnt;
 
             int fd = open(path, O_RDONLY);
-            if (fd == -1) return;
+            if (fd == -1) return 0;
 
             cnt = read(fd, environ, ENVIRON_MAX);
-            if (cnt == -1) {
-                close(fd);
-                return;
-            }
+            close(fd);
+            if (cnt == -1) return 0;
             for (int i = 0; i < cnt; i++) {
                 if (environ[i] == 0 && i + 1 != cnt) dest[i] = ' ';
                 else dest[i] = environ[i];
             }
 
-            if (fd != -1) close(fd);
-            break;
+            return cnt;
         }
         case codes::GET_LIMITS: {
             break;
@@ -68,7 +62,7 @@ void proc_ctl_dev::access(code_t code, byte *data, int data_sz, byte *dest) {
             snprintf(dir, PATH_MAX, "/proc/%d/ns", pid);
 
 #define LIMITS_MAX 200
-            char limits[LIMITS_MAX] = {};
+            char spaces[LIMITS_MAX] = {};
 
             static char *ns[] = {"/user", "/pid", "/mnt", "/net", "/ipc", "/cgroup", "/time", "/uts"};
 
@@ -77,16 +71,15 @@ void proc_ctl_dev::access(code_t code, byte *data, int data_sz, byte *dest) {
             for (int i = 0; i < sizeof(ns); i++) {
                 snprintf(path, PATH_MAX, "%s/%s", dir, ns[i]);
 
-                int ret = readlink(path, limits + cnt, LIMITS_MAX - cnt);
-                if (ret == -1) return;
+                int ret = readlink(path, spaces + cnt, LIMITS_MAX - cnt);
+                if (ret == -1) return 0;
 
                 cnt += ret;
-                if (i + 1 != sizeof(ns)) limits[cnt - 1] = ' ';
+                if (i + 1 != sizeof(ns)) spaces[cnt - 1] = ' ';
             }
 
-            memcpy(dest, path, cnt);
-
-            break;
+            memcpy(dest, spaces, cnt);
+            return cnt;
         }
         case codes::GET_MOUNT_INFO: {
             break;
@@ -98,27 +91,26 @@ void proc_ctl_dev::access(code_t code, byte *data, int data_sz, byte *dest) {
             char cwd[PATH_MAX] = {};
 
             int ret = readlink(path, cwd, PATH_MAX);
-            if (ret == -1) return;
+            if (ret == -1) return 0;
 
-            memcpy(dest, path, ret);
-
-            break;
+            memcpy(dest, cwd, ret);
+            return ret;
         }
         case codes::GET_ROOT_LINK: {
             char path[PATH_MAX] = {};
             snprintf(path, PATH_MAX, "/proc/%d/root", pid);
 
-            char cwd[PATH_MAX] = {};
+            char root[PATH_MAX] = {};
 
-            int ret = readlink(path, cwd, PATH_MAX);
-            if (ret == -1) return;
+            int ret = readlink(path, root, PATH_MAX);
+            if (ret == -1) return 0;
 
-            memcpy(dest, path, ret);
-
-            break;
+            memcpy(dest, root, ret);
+            return ret;
         }
     }
 }
 
-void proc_ctl_dev::access(code_t *codes, int code_sz, byte *data, int data_sz, byte *dest) {
+int proc_ctl_dev::access(code_t *codes, int code_sz, byte *data, int data_sz, byte *dest) {
+    return 0;
 }

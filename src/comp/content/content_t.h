@@ -13,11 +13,11 @@
 #include "textfile/textfile.h"
 
 enum class content_type {
-    null, textfile
+    null, textfile, ctl_dev_pt, stream_dev_pt
 };
 
 // all possible types of content data
-using content_data = union_variant<null_content, textfile>; // polymorphic data
+using content_data = union_variant<null_content, textfile, ctl_dev_pt, stream_dev_pt>; // polymorphic data
 
 struct content_t : public content_data {
     static inline content_type get_type(const content_t &val) {
@@ -25,6 +25,8 @@ struct content_t : public content_data {
             default:
             case content_data::type_index<null_content>(): return content_type::null;
             case content_data::type_index<textfile>(): return content_type::textfile;
+            case content_data::type_index<ctl_dev_pt>(): return content_type::ctl_dev_pt;
+            case content_data::type_index<stream_dev_pt>(): return content_type::stream_dev_pt;
         }
     }
 
